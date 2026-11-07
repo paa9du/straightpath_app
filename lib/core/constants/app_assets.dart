@@ -1,0 +1,44 @@
+abstract final class AppAssets {
+  static const logo = 'assets/images/straight_path_logo.png';
+  static const waves = 'assets/images/layered_waves.svg';
+  static const youthRole = 'assets/images/role_youth.png';
+  static const coachRole = 'assets/images/role_coach.png';
+  static const parentRole = 'assets/images/role_parent.png';
+  static const youthAvatar = 'assets/images/youth_avatar.png';
+  static const rick = 'assets/images/rick_martin.png';
+  static const lisa = 'assets/images/lisa_harmon.png';
+  static const ethan = 'assets/images/ethan_hunt.png';
+  static const peter = 'assets/images/peter_dinkelman.png';
+  static const profileAvatar = 'assets/images/profile_avatar.png';
+  static const skillsIllustrations = 'assets/images/skills_illustrations.png';
+
+  static const moodVeryBad = 'assets/images/mood_sad.png';
+  static const moodSad = 'assets/images/mood_neutral.png';
+  static const moodNeutral = 'assets/images/mood_good.png';
+  static const moodGood = 'assets/images/mood_very_bad.png';
+  static const moodVeryGood = 'assets/images/mood_very_good.png';
+
+  static const email = 'assets/icons/email.svg';
+  static const lock = 'assets/icons/lock.svg';
+  static const show = 'assets/icons/show.svg';
+  static const home = 'assets/icons/home.svg';
+  static const calendar = 'assets/icons/calendar.svg';
+  static const skills = 'assets/icons/skills.svg';
+  static const message = 'assets/icons/message.svg';
+  static const profile = 'assets/icons/profile.svg';
+  static const overview = 'assets/icons/overview.svg';
+  static const youths = 'assets/icons/youths.svg';
+  static const notes = 'assets/icons/notes.svg';
+  static const addNote = 'assets/icons/add_note.svg';
+  static const sendMessage = 'assets/icons/send_message.svg';
+  static const checkCircle = 'assets/icons/check_circle.svg';
+  static const chevronRight = 'assets/icons/chevron_right.svg';
+  static const search = 'assets/icons/search.svg';
+  static const logout = 'assets/icons/logout.svg';
+  static const notifications = 'assets/icons/notifications.svg';
+  static const editProfile = 'assets/icons/edit_profile.svg';
+  static const support = 'assets/icons/support.svg';
+  static const privacy = 'assets/icons/privacy.svg';
+  static const terms = 'assets/icons/terms.svg';
+  static const delete = 'assets/icons/delete.svg';
+}
