@@ -1,28 +1,5 @@
 import 'package:get/get.dart';
 
-import '../../features/coach/views/home/home_binding.dart' as coach;
-import '../../features/coach/views/home/home_view.dart' as coach;
-import '../../features/coach/views/chat/chat_binding.dart' as coach_chat;
-import '../../features/coach/views/chat/chat_view.dart' as coach_chat;
-import '../../features/coach/views/messages/messages_binding.dart'
-    as coach_messages;
-import '../../features/coach/views/messages/messages_view.dart'
-    as coach_messages;
-import '../../features/coach/views/notes/notes_binding.dart' as coach_notes;
-import '../../features/coach/views/notes/notes_view.dart' as coach_notes;
-import '../../features/coach/views/note_history/note_history_binding.dart'
-    as coach_note_history;
-import '../../features/coach/views/note_history/note_history_view.dart'
-    as coach_note_history;
-import '../../features/coach/views/profile/profile_binding.dart'
-    as coach_profile;
-import '../../features/coach/views/profile/profile_view.dart' as coach_profile;
-import '../../features/coach/views/youths/youths_binding.dart' as coach_youths;
-import '../../features/coach/views/youths/youths_view.dart' as coach_youths;
-import '../../features/coach/views/youth_detail/youth_detail_binding.dart'
-    as coach_youth_detail;
-import '../../features/coach/views/youth_detail/youth_detail_view.dart'
-    as coach_youth_detail;
 import '../../features/common/views/create_account/create_account_binding.dart';
 import '../../features/common/views/create_account/create_account_view.dart';
 import '../../features/common/views/forgot_password/forgot_password_binding.dart';
@@ -39,31 +16,6 @@ import '../../features/common/views/role_selection/role_selection_binding.dart';
 import '../../features/common/views/role_selection/role_selection_view.dart';
 import '../../features/common/views/splash/splash_binding.dart';
 import '../../features/common/views/splash/splash_view.dart';
-import '../../features/parent/views/home/home_binding.dart' as parent;
-import '../../features/parent/views/home/home_view.dart' as parent;
-import '../../features/parent/views/chat/chat_binding.dart' as parent_chat;
-import '../../features/parent/views/chat/chat_view.dart' as parent_chat;
-import '../../features/parent/views/messages/messages_binding.dart'
-    as parent_messages;
-import '../../features/parent/views/messages/messages_view.dart'
-    as parent_messages;
-import '../../features/parent/views/notes/notes_binding.dart' as parent_notes;
-import '../../features/parent/views/notes/notes_view.dart' as parent_notes;
-import '../../features/parent/views/note_history/note_history_binding.dart'
-    as parent_note_history;
-import '../../features/parent/views/note_history/note_history_view.dart'
-    as parent_note_history;
-import '../../features/parent/views/profile/profile_binding.dart'
-    as parent_profile;
-import '../../features/parent/views/profile/profile_view.dart'
-    as parent_profile;
-import '../../features/parent/views/youths/youths_binding.dart'
-    as parent_youths;
-import '../../features/parent/views/youths/youths_view.dart' as parent_youths;
-import '../../features/parent/views/youth_detail/youth_detail_binding.dart'
-    as parent_youth_detail;
-import '../../features/parent/views/youth_detail/youth_detail_view.dart'
-    as parent_youth_detail;
 import '../../features/youth/views/chat/chat_binding.dart' as youth_chat;
 import '../../features/youth/views/chat/chat_view.dart' as youth_chat;
 import '../../features/youth/views/emotional_check_in/emotional_check_in_binding.dart';
@@ -88,11 +40,30 @@ import '../../features/youth/views/skill_detail/skill_detail_binding.dart';
 import '../../features/youth/views/skill_detail/skill_detail_view.dart';
 import '../../features/youth/views/skills/skills_binding.dart';
 import '../../features/youth/views/skills/skills_view.dart';
+import '../../features/youth/views/emotional_regulation/emotional_regulation_binding.dart';
+import '../../features/youth/views/emotional_regulation/emotional_regulation_view.dart';
 import '../../features/youth/views/weekly/weekly_binding.dart';
 import '../../features/youth/views/weekly/weekly_view.dart';
 import '../../features/youth/views/weekly_detail/weekly_detail_binding.dart';
 import '../../features/youth/views/weekly_detail/weekly_detail_view.dart';
 import 'app_routes.dart';
+import '../../features/coach_parent/views/home/coach_parent_home_binding.dart';
+import '../../features/coach_parent/views/home/coach_parent_home_view.dart';
+import '../../features/coach_parent/views/youths/coach_parent_youths_binding.dart';
+import '../../features/coach_parent/views/youths/coach_parent_youths_view.dart';
+import '../../features/coach_parent/views/youth_detail/coach_parent_youth_detail_binding.dart';
+import '../../features/coach_parent/views/youth_detail/coach_parent_youth_detail_view.dart';
+import '../../features/coach_parent/views/notes/coach_parent_notes_binding.dart';
+import '../../features/coach_parent/views/notes/coach_parent_notes_view.dart';
+import '../../features/coach_parent/views/note_history/coach_parent_note_history_binding.dart';
+import '../../features/coach_parent/views/note_history/coach_parent_note_history_view.dart';
+import '../../features/coach_parent/views/messages/coach_parent_messages_binding.dart';
+import '../../features/coach_parent/views/messages/coach_parent_messages_view.dart';
+import '../../features/coach_parent/views/chat/coach_parent_chat_binding.dart';
+import '../../features/coach_parent/views/chat/coach_parent_chat_view.dart';
+import '../../features/coach_parent/views/profile/coach_parent_profile_binding.dart';
+import '../../features/coach_parent/views/profile/coach_parent_profile_view.dart';
+import '../../features/coach_parent/coach_parent_flow.dart';
 
 abstract final class AppPages {
   static final pages = <GetPage<dynamic>>[
@@ -152,6 +123,11 @@ abstract final class AppPages {
       page: WeeklyView.new,
       binding: WeeklyBinding(),
       transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: AppRoutes.youthEmotionalRegulation,
+      page: EmotionalRegulationView.new,
+      binding: EmotionalRegulationBinding(),
     ),
     GetPage(
       name: AppRoutes.youthWeeklyDetail,
@@ -217,92 +193,92 @@ abstract final class AppPages {
     ),
     GetPage(
       name: AppRoutes.coachHome,
-      page: coach.HomeView.new,
-      binding: coach.HomeBinding(),
+      page: CoachParentHomeView.new,
+      binding: CoachParentHomeBinding(CoachParentFlow.coach),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.coachYouths,
-      page: coach_youths.YouthsView.new,
-      binding: coach_youths.YouthsBinding(),
+      page: CoachParentYouthsView.new,
+      binding: CoachParentYouthsBinding(CoachParentFlow.coach),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.coachYouthDetail,
-      page: coach_youth_detail.YouthDetailView.new,
-      binding: coach_youth_detail.YouthDetailBinding(),
+      page: CoachParentYouthDetailView.new,
+      binding: CoachParentYouthDetailBinding(CoachParentFlow.coach),
     ),
     GetPage(
       name: AppRoutes.coachNotes,
-      page: coach_notes.NotesView.new,
-      binding: coach_notes.NotesBinding(),
+      page: CoachParentNotesView.new,
+      binding: CoachParentNotesBinding(CoachParentFlow.coach),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.coachNoteHistory,
-      page: coach_note_history.NoteHistoryView.new,
-      binding: coach_note_history.NoteHistoryBinding(),
+      page: CoachParentNoteHistoryView.new,
+      binding: CoachParentNoteHistoryBinding(CoachParentFlow.coach),
     ),
     GetPage(
       name: AppRoutes.coachMessages,
-      page: coach_messages.MessagesView.new,
-      binding: coach_messages.MessagesBinding(),
+      page: CoachParentMessagesView.new,
+      binding: CoachParentMessagesBinding(CoachParentFlow.coach),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.coachChat,
-      page: coach_chat.ChatView.new,
-      binding: coach_chat.ChatBinding(),
+      page: CoachParentChatView.new,
+      binding: CoachParentChatBinding(CoachParentFlow.coach),
     ),
     GetPage(
       name: AppRoutes.coachProfile,
-      page: coach_profile.ProfileView.new,
-      binding: coach_profile.ProfileBinding(),
+      page: CoachParentProfileView.new,
+      binding: CoachParentProfileBinding(CoachParentFlow.coach),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.parentHome,
-      page: parent.HomeView.new,
-      binding: parent.HomeBinding(),
+      page: CoachParentHomeView.new,
+      binding: CoachParentHomeBinding(CoachParentFlow.parent),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.parentYouths,
-      page: parent_youths.YouthsView.new,
-      binding: parent_youths.YouthsBinding(),
+      page: CoachParentYouthsView.new,
+      binding: CoachParentYouthsBinding(CoachParentFlow.parent),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.parentYouthDetail,
-      page: parent_youth_detail.YouthDetailView.new,
-      binding: parent_youth_detail.YouthDetailBinding(),
+      page: CoachParentYouthDetailView.new,
+      binding: CoachParentYouthDetailBinding(CoachParentFlow.parent),
     ),
     GetPage(
       name: AppRoutes.parentNotes,
-      page: parent_notes.NotesView.new,
-      binding: parent_notes.NotesBinding(),
+      page: CoachParentNotesView.new,
+      binding: CoachParentNotesBinding(CoachParentFlow.parent),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.parentNoteHistory,
-      page: parent_note_history.NoteHistoryView.new,
-      binding: parent_note_history.NoteHistoryBinding(),
+      page: CoachParentNoteHistoryView.new,
+      binding: CoachParentNoteHistoryBinding(CoachParentFlow.parent),
     ),
     GetPage(
       name: AppRoutes.parentMessages,
-      page: parent_messages.MessagesView.new,
-      binding: parent_messages.MessagesBinding(),
+      page: CoachParentMessagesView.new,
+      binding: CoachParentMessagesBinding(CoachParentFlow.parent),
       transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.parentChat,
-      page: parent_chat.ChatView.new,
-      binding: parent_chat.ChatBinding(),
+      page: CoachParentChatView.new,
+      binding: CoachParentChatBinding(CoachParentFlow.parent),
     ),
     GetPage(
       name: AppRoutes.parentProfile,
-      page: parent_profile.ProfileView.new,
-      binding: parent_profile.ProfileBinding(),
+      page: CoachParentProfileView.new,
+      binding: CoachParentProfileBinding(CoachParentFlow.parent),
       transition: Transition.noTransition,
     ),
   ];

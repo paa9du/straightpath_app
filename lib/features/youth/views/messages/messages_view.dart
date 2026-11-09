@@ -98,48 +98,72 @@ class _MessageTile extends StatelessWidget {
       ),
       child: InkWell(
         onTap: onTap,
-        child: SizedBox(
-          height: 80,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 26),
-            child: Row(
+        // Figma 475:1338 (390 x 80): avatar 48 at (25, 15), name 17 medium at
+        // top 15, subtitle 15 medium at top 39, "5 min ago" 12 regular
+        // top-aligned beside the name, 19px from the right edge.
+        child: MediaQuery.withNoTextScaling(
+          child: SizedBox(
+            height: 80,
+            child: Stack(
               children: [
-                ClipOval(
-                  child: Image.asset(
-                    person.imagePath,
-                    width: 48,
-                    height: 48,
-                    fit: BoxFit.cover,
+                Positioned(
+                  left: 26,
+                  top: 16,
+                  child: ClipOval(
+                    child: Image.asset(
+                      person.imagePath,
+                      width: 48,
+                      height: 48,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        person.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontSize: 16, height: 1.1),
-                      ),
-                      Text(
-                        person.program,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.ink.withValues(alpha: .48),
-                        ),
-                      ),
-                    ],
+                Positioned(
+                  left: 84,
+                  right: 96,
+                  top: 16,
+                  child: Text(
+                    person.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.ink,
+                    ),
                   ),
                 ),
-                Text(
-                  '5 Min Ago',
-                  style: Theme.of(context).textTheme.bodySmall
-                      ?.copyWith(color: AppColors.ink.withValues(alpha: .28)),
+                Positioned(
+                  left: 84,
+                  right: 16,
+                  top: 40,
+                  child: Text(
+                    'Hey, Checking In For Today...',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 15,
+                      height: 24 / 15,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.ink.withValues(alpha: .5),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 20,
+                  top: 18,
+                  child: Text(
+                    '5 Min Ago',
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 12,
+                      height: 16 / 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.ink.withValues(alpha: .3),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -1,3 +1,4 @@
+import '../buttons/app_back_arrow.dart';
 import 'package:flutter/material.dart';
 
 class ScreenHeader extends StatelessWidget {
@@ -24,10 +25,18 @@ class ScreenHeader extends StatelessWidget {
             child: IconButton(
               onPressed: onBack,
               tooltip: 'Back',
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+              icon: const AppBackArrow(),
             ),
           ),
-          Text(title, style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'Manrope',
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF101720),
+            ),
+          ),
           if (trailing != null)
             Align(alignment: Alignment.centerRight, child: trailing!),
         ],

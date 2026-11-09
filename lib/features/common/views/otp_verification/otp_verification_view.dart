@@ -34,16 +34,25 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
                   const SizedBox(height: 16),
                   Stack(
                     children: [
-                      Obx(
-                        () => Row(
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                            // 54px boxes when they fit, otherwise shrink so
+                            // six boxes never overflow narrow screens.
+                            final box = ((constraints.maxWidth - 5 * 6) / 6)
+                                .clamp(36.0, 54.0)
+                                .toDouble();
+                          // Obx must be inside the builder so the observable is
+                          // read within its own reactive scope.
+                          return Obx(
+                            () => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: List.generate(6, (index) {
                             final value = index < controller.otp.value.length
                                 ? controller.otp.value[index]
                                 : '';
                             return Container(
-                              width: 54,
-                              height: 54,
+                              width: box,
+                              height: box,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -56,7 +65,9 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
                               ),
                             );
                           }),
-                        ),
+                            ),
+                          );
+                        },
                       ),
                       Positioned.fill(
                         child: Opacity(

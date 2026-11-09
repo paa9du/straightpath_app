@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/responsive/responsive_layout.dart';
@@ -10,6 +11,11 @@ import 'emotional_check_in_controller.dart';
 
 class EmotionalCheckInView extends GetView<EmotionalCheckInController> {
   const EmotionalCheckInView({super.key});
+
+  static final _noteBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(16),
+    borderSide: BorderSide(color: AppColors.ink.withValues(alpha: .1)),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class EmotionalCheckInView extends GetView<EmotionalCheckInController> {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                mainAxisExtent: 112,
+                mainAxisExtent: 99,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 14,
               ),
@@ -51,28 +57,52 @@ class EmotionalCheckInView extends GetView<EmotionalCheckInController> {
                       controller.selectedFeeling.value == feeling.label;
                   return InkWell(
                     onTap: () => controller.selectFeeling(feeling.label),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(16),
                     child: Container(
+                      clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
                         color: active
                             ? AppColors.yellow.withValues(alpha: .38)
                             : Colors.white,
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: active
                               ? AppColors.coral
-                              : AppColors.ink.withValues(alpha: .15),
+                              : AppColors.ink.withValues(alpha: .1),
                         ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Stack(
                         children: [
-                          Text(
-                            feeling.emoji,
-                            style: const TextStyle(fontSize: 38, height: 1),
+                          Positioned(
+                            top: -1,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: SvgPicture.asset(
+                                feeling.assetPath,
+                                width: 72,
+                                height: 72,
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(feeling.label),
+                          Positioned(
+                            top: 71,
+                            left: 4,
+                            right: 4,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                feeling.label,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Manrope',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.ink.withValues(alpha: .8),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -96,12 +126,33 @@ class EmotionalCheckInView extends GetView<EmotionalCheckInController> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 10),
-            TextField(
-              controller: controller.noteController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                hintText: 'Add A Note Here...',
-                fillColor: AppColors.cream,
+            SizedBox(
+              height: 125,
+              child: TextField(
+                controller: controller.noteController,
+                maxLines: null,
+                expands: true,
+                textAlignVertical: TextAlignVertical.top,
+                style: TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.ink.withValues(alpha: .8),
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Add A Note Here...',
+                  hintStyle: TextStyle(
+                    fontFamily: 'Manrope',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.ink.withValues(alpha: .4),
+                  ),
+                  fillColor: AppColors.cream,
+                  contentPadding: const EdgeInsets.all(14),
+                  border: _noteBorder,
+                  enabledBorder: _noteBorder,
+                  focusedBorder: _noteBorder,
+                ),
               ),
             ),
             const SizedBox(height: 16),

@@ -10,6 +10,7 @@ class CreateAccountController extends GetxController {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final obscurePassword = true.obs;
+  final obscureConfirmPassword = true.obs;
   late final String roleName;
 
   @override
@@ -19,6 +20,8 @@ class CreateAccountController extends GetxController {
   }
 
   void togglePasswordVisibility() => obscurePassword.toggle();
+
+  void toggleConfirmPasswordVisibility() => obscureConfirmPassword.toggle();
 
   void createAccount() =>
       Get.toNamed(AppRoutes.otpVerification, arguments: roleName);

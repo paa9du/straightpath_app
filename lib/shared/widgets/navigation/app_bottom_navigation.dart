@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../common/app_press_effect.dart';
 
 class AppNavItem {
-  const AppNavItem({required this.label, required this.iconAsset});
+  const AppNavItem({
+    required this.label,
+    required this.iconAsset,
+    this.activeIconAsset,
+  });
 
   final String label;
   final String iconAsset;
+  final String? activeIconAsset;
 }
 
 class AppBottomNavigation extends StatelessWidget {
@@ -23,58 +27,76 @@ class AppBottomNavigation extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
+  static const _ink = Color(0xFF101720);
+  static const _iconIdle = Color(0xFF2D264B);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 82,
-      decoration: const BoxDecoration(color: AppColors.navSurface),
-      padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
+      color: const Color(0xFFF2F2F2),
+      padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
       child: Row(
         children: List.generate(items.length, (index) {
           final item = items[index];
           final isActive = index == currentIndex;
-          final color = isActive ? AppColors.coral : AppColors.ink;
+          Widget svg(String asset) => SvgPicture.asset(
+                asset,
+                width: 24,
+                height: 24,
+                colorFilter: isActive
+                    ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                    : const ColorFilter.mode(_iconIdle, BlendMode.srcIn),
+              );
+          // Falls back to the regular icon if the filled variant can't load.
+          Widget icon = isActive && item.activeIconAsset != null
+              ? SvgPicture.asset(
+                  item.activeIconAsset!,
+                  width: 24,
+                  height: 24,
+                  colorFilter:
+                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  errorBuilder: (context, error, stack) =>
+                      svg(item.iconAsset),
+                )
+              : svg(item.iconAsset);
+          if (isActive) {
+            icon = ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (rect) => const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFFF5B84A), Color(0xFFFF6464)],
+              ).createShader(rect),
+              child: icon,
+            );
+          }
           return Expanded(
             child: AppPressEffect(
-              child: Material(
-                color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onTap(index),
                 borderRadius: BorderRadius.circular(14),
-                child: InkWell(
-                  onTap: () => onTap(index),
-                  borderRadius: BorderRadius.circular(14),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? AppColors.coral.withValues(alpha: .11)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          item.iconAsset,
-                          width: 24,
-                          height: 24,
-                          colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 2),
+                    icon,
+                    const SizedBox(height: 4),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        item.label,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: 'Manrope',
+                          fontSize: 13,
+                          fontWeight:
+                              isActive ? FontWeight.w800 : FontWeight.w400,
+                          color: _ink.withValues(alpha: .8),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item.label,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: isActive
-                                    ? AppColors.coral
-                                    : AppColors.ink.withValues(alpha: .72),
-                              ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),

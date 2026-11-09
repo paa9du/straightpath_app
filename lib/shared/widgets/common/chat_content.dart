@@ -1,7 +1,13 @@
+import '../buttons/app_back_arrow.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/app_interaction_feedback.dart';
+
+final _fieldBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.circular(8.75),
+  borderSide: BorderSide(color: AppColors.ink.withValues(alpha: .1)),
+);
 
 class ChatContent extends StatelessWidget {
   const ChatContent({
@@ -30,7 +36,7 @@ class ChatContent extends StatelessWidget {
               IconButton(
                 onPressed: onBack,
                 tooltip: 'Back',
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                icon: const AppBackArrow(),
               ),
               ClipOval(
                 child: Image.asset(
@@ -69,7 +75,8 @@ class ChatContent extends StatelessWidget {
               return Align(
                 alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
                 child: Container(
-                  width: 313,
+                  width: MediaQuery.sizeOf(context).width * .74,
+                  constraints: const BoxConstraints(maxWidth: 313),
                   margin: const EdgeInsets.only(bottom: 20),
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                   decoration: BoxDecoration(
@@ -81,8 +88,12 @@ class ChatContent extends StatelessWidget {
                     children: [
                       Text(
                         'Lorem ipsum dolor sit amet consectetur. Diam convallis non morbi feugiat. Eu fermentum massa fames platea tortor egestas dictum vestibulum.',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.ink.withValues(alpha: .72),
+                        style: TextStyle(
+                          fontFamily: 'Manrope',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          height: 22 / 14,
+                          color: AppColors.ink.withValues(alpha: .7),
                         ),
                       ),
                       Align(
@@ -125,11 +136,24 @@ class ChatContent extends StatelessWidget {
                   height: 44,
                   child: TextField(
                     controller: messageController,
-                    decoration: const InputDecoration(
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 15,
+                      color: AppColors.ink.withValues(alpha: .8),
+                    ),
+                    decoration: InputDecoration(
                       hintText: 'Type something',
-                      filled: false,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                      border: OutlineInputBorder(),
+                      hintStyle: TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: 15,
+                        color: AppColors.ink.withValues(alpha: .5),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 25),
+                      border: _fieldBorder,
+                      enabledBorder: _fieldBorder,
+                      focusedBorder: _fieldBorder,
                     ),
                     onSubmitted: (_) => onSend(),
                   ),

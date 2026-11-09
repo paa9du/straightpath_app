@@ -1,6 +1,7 @@
 class FeelingOption {
-  const FeelingOption({required this.emoji, required this.label});
+  const FeelingOption({required this.assetPath, required this.label});
 
-  final String emoji;
+  /// SVG illustration shown on the feeling tile.
+  final String assetPath;
   final String label;
 }

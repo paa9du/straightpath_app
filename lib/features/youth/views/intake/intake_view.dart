@@ -1,3 +1,4 @@
+import '../../../../shared/widgets/buttons/app_back_arrow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,7 @@ class IntakeView extends GetView<IntakeController> {
                         IconButton(
                           onPressed: controller.back,
                           tooltip: 'Back',
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                          icon: const AppBackArrow(),
                         ),
                         Expanded(
                           child: Text(
@@ -41,7 +42,12 @@ class IntakeView extends GetView<IntakeController> {
                           child: Text(
                             '${step + 1}/4',
                             textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: const TextStyle(
+                              fontFamily: 'Manrope',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ],
@@ -87,7 +93,10 @@ class _StepOne extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitle('STEP 1: Participant Identification (Required)'),
+        const _SectionTitle(
+          'STEP 1: Participant Identification ',
+          suffix: '(Required)',
+        ),
         _Field(
           controller: controller.fullNameController,
           hint: 'Full Legal Name',
@@ -102,7 +111,7 @@ class _StepOne extends StatelessWidget {
           hint: 'Preferred Language',
         ),
         const SizedBox(height: 14),
-        const _SectionTitle('STEP 2: Why Are You Here?'),
+        const _SectionTitle('STEP 2: Why Are You Here?', gapAfter: 16),
         ...[
           'I’m here because of a court or probation requirement',
           'I’m here for support with my behavior, emotions, or mental health',
@@ -126,9 +135,14 @@ class _StepTwo extends StatelessWidget {
       children: [
         Text(
           'Were You Referred By Someone?',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: TextStyle(
+            fontFamily: 'Manrope',
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.ink.withValues(alpha: .8),
+          ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 24),
         _WrapChoices(
           controller: controller,
           values: const [
@@ -140,7 +154,7 @@ class _StepTwo extends StatelessWidget {
             'I Signed Up Myself',
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
         const _SectionTitle('STEP 3: Court Or Legal Involvement'),
         _Question(
           text: 'Are you currently involved with the court system?',
@@ -179,9 +193,9 @@ class _StepThree extends StatelessWidget {
         const _SectionTitle('STEP 4: Current Living Situation'),
         Text(
           'Where are you living right now?',
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: _questionStyle(weight: FontWeight.w400),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 16),
         ...[
           'With a parent or guardian',
           'In transitional or supported housing',
@@ -191,11 +205,13 @@ class _StepThree extends StatelessWidget {
           (value) =>
               _LargeChoice(value: value, controller: controller, filled: true),
         ),
+        const SizedBox(height: 6),
         _Question(
           text: 'Is there an adult who helps take care of you or supports you?',
           controller: controller,
           values: const ['Yes', 'No'],
         ),
+        const SizedBox(height: 8),
         const _SectionTitle('STEP 5: Parent / Guardian Involvement'),
         _Question(
           text: 'Is it okay for a parent or guardian to see your progress?',
@@ -219,9 +235,9 @@ class _StepFour extends StatelessWidget {
       children: [
         Text(
           'If yes, what should they be able to see?',
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: _questionStyle(),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 16),
         _WrapChoices(
           controller: controller,
           values: const [
@@ -230,7 +246,7 @@ class _StepFour extends StatelessWidget {
             'Both',
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 21),
         const _SectionTitle('Enter Parent/Guardian Details:'),
         _Field(
           controller: controller.guardianNameController,
@@ -240,37 +256,82 @@ class _StepFour extends StatelessWidget {
           controller: controller.guardianEmailController,
           hint: 'Email Address',
         ),
+        const SizedBox(height: 11),
         const _SectionTitle('Permissions'),
         _Question(
           text: 'Do you agree to participate in this program using this app?',
           controller: controller,
           values: const ['Yes', 'No'],
+          gap: 21,
         ),
         _Question(
           text: 'Do you agree that your coach can use this app to support you and track progress?',
           controller: controller,
           values: const ['Yes', 'No'],
+          gap: 21,
+        ),
+        _Question(
+          text:
+              'If required, do you agree to share progress with the court or referring agency?',
+          controller: controller,
+          values: const ['Yes', 'No'],
+          gap: 21,
         ),
       ],
     );
   }
 }
 
+TextStyle _questionStyle({FontWeight weight = FontWeight.w600}) => TextStyle(
+      fontFamily: 'Manrope',
+      fontSize: 17,
+      fontWeight: weight,
+      color: AppColors.ink.withValues(alpha: .8),
+    );
+
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.text);
+  const _SectionTitle(
+    this.text, {
+    this.suffix,
+    this.bottomPad = 25,
+    this.gapAfter = 24,
+  });
 
   final String text;
+  final String? suffix;
+  final double bottomPad;
+  final double gapAfter;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.only(bottom: 14),
+      margin: EdgeInsets.only(bottom: gapAfter),
+      padding: EdgeInsets.only(bottom: bottomPad),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.divider)),
       ),
-      child: Text(text, style: Theme.of(context).textTheme.titleMedium),
+      child: Text.rich(
+        TextSpan(
+          text: text,
+          style: TextStyle(
+            fontFamily: 'Manrope',
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: AppColors.ink.withValues(alpha: .8),
+          ),
+          children: [
+            if (suffix != null)
+              TextSpan(
+                text: suffix,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.ink.withValues(alpha: .2),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -287,9 +348,25 @@ class _Field extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: TextField(
         controller: controller,
+        style: TextStyle(
+          fontFamily: 'Manrope',
+          fontSize: 17,
+          color: AppColors.ink,
+        ),
         decoration: InputDecoration(
           hintText: hint,
-          fillColor: const Color(0xFFF7F7F7),
+          hintStyle: TextStyle(
+            fontFamily: 'Manrope',
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
+            color: AppColors.ink.withValues(alpha: .5),
+          ),
+          fillColor: const Color(0xFFF6F6F6),
+          constraints: const BoxConstraints(minHeight: 60),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 28,
+            vertical: 17,
+          ),
         ),
       ),
     );
@@ -318,19 +395,35 @@ class _LargeChoice extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            constraints: const BoxConstraints(minHeight: 60),
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.symmetric(
+              horizontal: filled ? 28 : 14,
+              vertical: 10,
+            ),
             decoration: BoxDecoration(
               color: active
                   ? AppColors.coral.withValues(alpha: .12)
                   : filled
-                  ? const Color(0xFFF7F7F7)
+                  ? const Color(0xFFF6F6F6)
                   : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: filled
                   ? null
                   : Border.all(color: AppColors.ink.withValues(alpha: .2)),
             ),
-            child: Text(value, style: Theme.of(context).textTheme.bodyMedium),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontFamily: 'Manrope',
+                fontSize: filled ? 17 : 15,
+                height: filled ? null : 20 / 15,
+                fontWeight: FontWeight.w400,
+                color: AppColors.ink.withValues(
+                  alpha: filled && !active ? .5 : .8,
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -339,25 +432,52 @@ class _LargeChoice extends StatelessWidget {
 }
 
 class _WrapChoices extends StatelessWidget {
-  const _WrapChoices({required this.controller, required this.values});
+  const _WrapChoices({
+    required this.controller,
+    required this.values,
+    this.runSpacing = 10,
+  });
 
   final IntakeController controller;
   final List<String> values;
+  final double runSpacing;
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Wrap(
-        spacing: 8,
-        runSpacing: 8,
+        spacing: 10,
+        runSpacing: runSpacing,
         children: values.map((value) {
           final active = controller.selected.contains(value);
-          return ChoiceChip(
-            label: Text(value),
-            selected: active,
-            onSelected: (_) => controller.toggle(value),
-            selectedColor: AppColors.coral.withValues(alpha: .18),
-            side: BorderSide.none,
+          // Short answers (Yes / No / I’m Not Sure) use wider side padding.
+          final horizontalPadding =
+              value == 'Both' ? 20.0 : (value.length <= 12 ? 24.0 : 10.0);
+          return InkWell(
+            onTap: () => controller.toggle(value),
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: active
+                    ? AppColors.coral.withValues(alpha: .18)
+                    : const Color(0xFFF6F6F6),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 13,
+                  height: 24 / 13,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.ink.withValues(alpha: .8),
+                ),
+              ),
+            ),
           );
         }).toList(),
       ),
@@ -370,23 +490,39 @@ class _Question extends StatelessWidget {
     required this.text,
     required this.controller,
     required this.values,
+    this.gap = 16,
   });
 
   final String text;
   final IntakeController controller;
   final List<String> values;
+  final double gap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(text, style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 10),
-          _WrapChoices(controller: controller, values: values),
-        ],
+      padding: EdgeInsets.only(bottom: gap),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Figma: 16px under a one-line question, 10px under a wrapped one.
+          final painter = TextPainter(
+            text: TextSpan(text: text, style: _questionStyle()),
+            textDirection: TextDirection.ltr,
+          )..layout(maxWidth: constraints.maxWidth);
+          final wrapped = painter.computeLineMetrics().length > 1;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(text, style: _questionStyle()),
+              SizedBox(height: wrapped ? 10 : 16),
+              _WrapChoices(
+                controller: controller,
+                values: values,
+                runSpacing: 16,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

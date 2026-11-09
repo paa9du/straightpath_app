@@ -29,11 +29,11 @@ class MoodSelector extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(moods.length, (index) {
               final mood = moods[index];
               final selected = index == selectedIndex;
-              return AppPressEffect(
+              return Expanded(
+                child: AppPressEffect(
                 child: Material(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
@@ -43,13 +43,13 @@ class MoodSelector extends StatelessWidget {
                     child: AnimatedScale(
                       duration: const Duration(milliseconds: 160),
                       scale: selected ? 1.08 : 1,
-                      child: SizedBox(
-                        width: 64,
-                        child: Column(
-                          children: [
-                            Image.asset(mood.assetPath, width: 52, height: 52),
-                            const SizedBox(height: 5),
-                            Text(
+                      child: Column(
+                        children: [
+                          Image.asset(mood.assetPath, width: 52, height: 52),
+                          const SizedBox(height: 5),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
                               mood.label,
                               maxLines: 1,
                               style: Theme.of(context).textTheme.bodySmall
@@ -60,11 +60,12 @@ class MoodSelector extends StatelessWidget {
                                         : FontWeight.w400,
                                   ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                ),
                 ),
               );
             }),
@@ -85,10 +86,19 @@ class MoodSelector extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                   TextSpan(
-                    text: '${moods[selectedIndex].label} 🙂',
+                    text: moods[selectedIndex].label,
                     style: const TextStyle(
                       color: AppColors.success,
                       fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const TextSpan(text: ' '),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: Image.asset(
+                      moods[selectedIndex].assetPath,
+                      width: 22,
+                      height: 22,
                     ),
                   ),
                 ],

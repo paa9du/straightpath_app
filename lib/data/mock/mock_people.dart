@@ -11,13 +11,13 @@ abstract final class MockPeople {
     ),
     PersonSummary(
       name: 'Lisa Harmon',
-      program: 'Transitional Housing',
+      program: 'Court-Involved Juvenile',
       imagePath: AppAssets.lisa,
       completedSteps: 4,
     ),
     PersonSummary(
       name: 'Ethan Hunt',
-      program: 'After-School Initiatives',
+      program: 'Court-Involved Juvenile',
       imagePath: AppAssets.ethan,
       completedSteps: 2,
     ),
@@ -25,7 +25,7 @@ abstract final class MockPeople {
       name: 'Peter Dinkelman',
       program: 'Court-Involved Juvenile',
       imagePath: AppAssets.peter,
-      completedSteps: 3,
+      completedSteps: 2,
     ),
   ];
 

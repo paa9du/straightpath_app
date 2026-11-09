@@ -56,7 +56,7 @@ class _DailyTabsState extends State<DailyTabs> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 42,
+      height: 30,
       child: SingleChildScrollView(
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
@@ -64,41 +64,34 @@ class _DailyTabsState extends State<DailyTabs> {
         child: Row(
           children: List.generate(DailyTabs.labels.length, (index) {
             final active = index == widget.currentIndex;
+            final isLast = index == DailyTabs.labels.length - 1;
             return Semantics(
               selected: active,
               button: true,
               child: AppPressEffect(
-                child: Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                  child: InkWell(
-                    onTap: () => widget.onTap(index),
-                    borderRadius: BorderRadius.circular(20),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.fromLTRB(14, 9, 14, 7),
-                      decoration: BoxDecoration(
-                        color: active
-                            ? AppColors.coral.withValues(alpha: .12)
-                            : const Color(0xFFF7F7F7),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: active
-                              ? AppColors.coral.withValues(alpha: .42)
-                              : AppColors.divider,
+                child: InkWell(
+                  onTap: () => widget.onTap(index),
+                  child: Container(
+                    margin: EdgeInsets.only(right: isLast ? 0 : 16),
+                    padding: const EdgeInsets.only(bottom: 4),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 2,
+                          color: active ? AppColors.coral : Colors.transparent,
                         ),
                       ),
-                      child: Text(
-                        DailyTabs.labels[index],
-                        maxLines: 1,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontSize: 12,
-                          fontWeight: active
-                              ? FontWeight.w800
-                              : FontWeight.w500,
-                          color: active ? AppColors.coral : AppColors.ink,
-                        ),
+                    ),
+                    child: Text(
+                      DailyTabs.labels[index],
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: active ? 14 : 12,
+                        fontWeight: active ? FontWeight.w800 : FontWeight.w400,
+                        color: active
+                            ? AppColors.coral
+                            : AppColors.ink.withValues(alpha: .8),
                       ),
                     ),
                   ),

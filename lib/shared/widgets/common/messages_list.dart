@@ -90,12 +90,35 @@ class MessagesList extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                person.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(fontSize: 16, height: 1.1),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      person.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(fontSize: 16, height: 1.1),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  // Figma 375:951 – 12 regular, ink @ 30 %,
+                                  // right-aligned on the name row.
+                                  Text(
+                                    '5 Min Ago',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      height: 16 / 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.ink.withValues(
+                                        alpha: .3,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               Text(
                                 'Hey, Checking In For Today...',
@@ -112,13 +135,6 @@ class MessagesList extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
-                        Text(
-                          '5 Min Ago',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: AppColors.ink.withValues(alpha: .28),
-                              ),
                         ),
                       ],
                     ),

@@ -23,6 +23,8 @@ class HomeController extends GetxController {
 
   void openWeeklyProgress() => Get.toNamed(AppRoutes.youthWeekly);
 
+  void openLessons() => Get.toNamed(AppRoutes.youthEmotionalRegulation);
+
   void onDailyTab(int index) => FlowNavigation.daily(0, index);
 
   void selectNavigationItem(int index) {

@@ -28,8 +28,16 @@ class PeopleOverview extends StatelessWidget {
     AppNavItem(label: 'Overview', iconAsset: AppAssets.overview),
     AppNavItem(label: 'Youths', iconAsset: AppAssets.youths),
     AppNavItem(label: 'Notes', iconAsset: AppAssets.notes),
-    AppNavItem(label: 'Message', iconAsset: AppAssets.message),
-    AppNavItem(label: 'Profile', iconAsset: AppAssets.profile),
+    AppNavItem(
+      label: 'Message',
+      iconAsset: AppAssets.message,
+      activeIconAsset: AppAssets.messageFilled,
+    ),
+    AppNavItem(
+      label: 'Profile',
+      iconAsset: AppAssets.profile,
+      activeIconAsset: AppAssets.profileFilled,
+    ),
   ];
 
   @override
@@ -41,36 +49,45 @@ class PeopleOverview extends StatelessWidget {
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                padding: const EdgeInsets.fromLTRB(20, 13, 20, 24),
                 children: [
                   Center(
                     child: Text(
                       'Overview',
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(height: 33 / 24),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Program Filter',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(height: 44, child: const _ProgramFilterBar()),
+                  const SizedBox(height: 19),
+                  const Text('Program Filter', style: _sectionTitle),
+                  const SizedBox(height: 9),
+                  const SizedBox(height: 44, child: _ProgramFilterBar()),
                   const SizedBox(height: 24),
                   Row(
                     children: [
-                      Text(
-                        'Youth',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
+                      const Text('Youth', style: _sectionTitle),
                       const Spacer(),
-                      TextButton(
-                        onPressed: () => onNavigationTap(1),
-                        child: const Text('See More  ›'),
+                      InkWell(
+                        onTap: () => onNavigationTap(1),
+                        child: Row(
+                          children: [
+                            Text(
+                              'See More',
+                              style: TextStyle(
+                                fontSize: 12,
+                                height: 16 / 12,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.ink.withValues(alpha: .3),
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            const OverviewChevron(),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 9),
                   ...people.map(
                     (person) => Padding(
                       padding: const EdgeInsets.only(bottom: 20),
@@ -97,6 +114,12 @@ class PeopleOverview extends StatelessWidget {
   }
 }
 
+const _sectionTitle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w600,
+  color: Color(0xCC101720),
+);
+
 class _ProgramFilterBar extends StatefulWidget {
   const _ProgramFilterBar();
 
@@ -108,17 +131,18 @@ class _ProgramFilterBarState extends State<_ProgramFilterBar> {
   static const labels = [
     'Court-Involved Juvenile',
     'Transitional Housing',
-    'After-School',
+    'After-School Initiatives',
   ];
   var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
       primary: false,
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
       itemCount: labels.length,
+      separatorBuilder: (context, index) => const SizedBox(width: 10),
       itemBuilder: (context, index) => _FilterChip(
         label: labels[index],
         active: selectedIndex == index,
@@ -141,30 +165,29 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(24),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(24),
-          child: Ink(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: active ? null : const Color(0xFFF7F7F7),
-              gradient: active ? AppColors.primaryGradient : null,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: active
-                      ? Colors.white
-                      : AppColors.ink.withValues(alpha: .7),
-                  fontWeight: active ? FontWeight.w700 : FontWeight.w400,
-                ),
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Ink(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: active ? null : const Color(0xFFF6F6F6),
+            gradient: active ? overviewGradient : null,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                height: 24 / 13,
+                color: active
+                    ? Colors.white
+                    : AppColors.ink.withValues(alpha: .8),
+                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ),

@@ -19,8 +19,16 @@ class StaffPageScaffold extends StatelessWidget {
     AppNavItem(label: 'Overview', iconAsset: AppAssets.overview),
     AppNavItem(label: 'Youths', iconAsset: AppAssets.youths),
     AppNavItem(label: 'Notes', iconAsset: AppAssets.notes),
-    AppNavItem(label: 'Message', iconAsset: AppAssets.message),
-    AppNavItem(label: 'Profile', iconAsset: AppAssets.profile),
+    AppNavItem(
+      label: 'Message',
+      iconAsset: AppAssets.message,
+      activeIconAsset: AppAssets.messageFilled,
+    ),
+    AppNavItem(
+      label: 'Profile',
+      iconAsset: AppAssets.profile,
+      activeIconAsset: AppAssets.profileFilled,
+    ),
   ];
 
   @override

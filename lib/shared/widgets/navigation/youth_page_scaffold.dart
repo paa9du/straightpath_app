@@ -16,11 +16,27 @@ class YouthPageScaffold extends StatelessWidget {
   final Widget body;
 
   static const _items = [
-    AppNavItem(label: 'Today', iconAsset: AppAssets.home),
-    AppNavItem(label: 'Weekly', iconAsset: AppAssets.calendar),
+    AppNavItem(
+      label: 'Today',
+      iconAsset: AppAssets.homeOutline,
+      activeIconAsset: AppAssets.home,
+    ),
+    AppNavItem(
+      label: 'Weekly',
+      iconAsset: AppAssets.calendar,
+      activeIconAsset: AppAssets.calendarFilled,
+    ),
     AppNavItem(label: 'Skills', iconAsset: AppAssets.skills),
-    AppNavItem(label: 'Message', iconAsset: AppAssets.message),
-    AppNavItem(label: 'Profile', iconAsset: AppAssets.profile),
+    AppNavItem(
+      label: 'Message',
+      iconAsset: AppAssets.message,
+      activeIconAsset: AppAssets.messageFilled,
+    ),
+    AppNavItem(
+      label: 'Profile',
+      iconAsset: AppAssets.profile,
+      activeIconAsset: AppAssets.profileFilled,
+    ),
   ];
 
   @override

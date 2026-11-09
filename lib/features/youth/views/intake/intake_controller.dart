@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../app/routes/app_routes.dart';
+import 'widgets/intake_complete_dialog.dart';
 
 class IntakeController extends GetxController {
   final step = 0.obs;
@@ -29,7 +30,9 @@ class IntakeController extends GetxController {
     if (step.value < 3) {
       step.value++;
     } else {
-      Get.offAllNamed(AppRoutes.youthHome);
+      IntakeCompleteDialog.show(
+        onGetStarted: () => Get.offAllNamed(AppRoutes.youthHome),
+      );
     }
   }
 

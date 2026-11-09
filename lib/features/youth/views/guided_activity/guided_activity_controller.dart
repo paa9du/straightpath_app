@@ -4,7 +4,8 @@ import '../../../../app/routes/app_routes.dart';
 import '../../../../core/utils/flow_navigation.dart';
 
 class GuidedActivityController extends GetxController {
-  final isPlaying = false.obs;
+  // Starts in the running state, which is what the design shows (pause icon).
+  final isPlaying = true.obs;
   final currentStep = 0.obs;
 
   void togglePlayback() => isPlaying.toggle();

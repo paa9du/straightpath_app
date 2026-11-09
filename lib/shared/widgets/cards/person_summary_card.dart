@@ -1,10 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../core/constants/app_assets.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_radii.dart';
+import '../../../core/utils/title_case.dart';
 import '../../models/person_summary.dart';
 import '../common/app_press_effect.dart';
-import 'progress_tracker.dart';
+
+/// Figma coral -> orange gradient used by the progress fill and active chip.
+const overviewGradient = LinearGradient(
+  colors: [Color(0xFFE8777E), Color(0xFFEAB078)],
+);
+
+/// 14px "Right 2" chevron (ink @ 30%) exactly as drawn in Figma.
+class OverviewChevron extends StatelessWidget {
+  const OverviewChevron({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 14,
+      height: 14,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 5.396,
+            top: 3.646,
+            child: SvgPicture.asset(
+              AppAssets.chevronRight,
+              width: 3.20833,
+              height: 6.70833,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class PersonSummaryCard extends StatelessWidget {
   const PersonSummaryCard({
@@ -28,92 +60,18 @@ class PersonSummaryCard extends StatelessWidget {
       children: [
         AppPressEffect(
           child: Material(
-            elevation: 1,
-            shadowColor: AppColors.ink.withValues(alpha: .18),
             color: AppColors.cream,
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppRadii.card),
-              side: BorderSide(color: AppColors.ink.withValues(alpha: .16)),
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(color: AppColors.ink.withValues(alpha: .2)),
             ),
             child: InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(AppRadii.card),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(26, 16, 26, 18),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        ClipOval(
-                          child: Image.asset(
-                            person.imagePath,
-                            width: 48,
-                            height: 48,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                person.name,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              Text(
-                                person.program,
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      color: AppColors.ink.withValues(
-                                        alpha: .5,
-                                      ),
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          'Explore  ›',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: AppColors.ink.withValues(alpha: .3),
-                              ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Status: ',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            TextSpan(text: person.statusDate),
-                          ],
-                        ),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.ink.withValues(alpha: .65),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ProgressTracker(
-                      labels: const [
-                        'Check-In',
-                        'Focus',
-                        'Activity',
-                        'Reflection',
-                      ],
-                      completedSteps: person.completedSteps,
-                      compact: true,
-                    ),
-                  ],
-                ),
+              child: SizedBox(
+                height: 180,
+                width: double.infinity,
+                child: _CardBody(person: person),
               ),
             ),
           ),
@@ -124,23 +82,313 @@ class PersonSummaryCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _ActionButton(
-                  icon: Icons.note_alt_outlined,
                   label: 'Add Note',
                   onTap: onAddNote,
+                  icon: const _GlyphIcon(
+                    asset: AppAssets.addNote,
+                    left: 2.25,
+                    top: 1.25,
+                    width: 19.5,
+                    height: 21.5,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: _ActionButton(
-                  icon: Icons.chat_bubble_outline,
                   label: 'Send Message',
                   onTap: onSendMessage,
+                  icon: const _GlyphIcon(
+                    asset: AppAssets.sendMessage,
+                    left: 1.25,
+                    top: 1.25,
+                    width: 21.4981,
+                    height: 21.5258,
+                  ),
                 ),
               ),
             ],
           ),
         ],
       ],
+    );
+  }
+}
+
+class _CardBody extends StatelessWidget {
+  const _CardBody({required this.person});
+
+  final PersonSummary person;
+
+  @override
+  Widget build(BuildContext context) {
+    final dim = AppColors.ink.withValues(alpha: .8);
+    final faint = AppColors.ink.withValues(alpha: .3);
+    return Stack(
+      children: [
+        Positioned(
+          left: 25,
+          top: 15,
+          child: ClipOval(
+            child: Image.asset(
+              person.imagePath,
+              width: 48,
+              height: 48,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Positioned(
+          left: 83,
+          top: 15,
+          child: Text(
+            titleCase(person.name),
+            maxLines: 1,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: AppColors.ink,
+            ),
+          ),
+        ),
+        Positioned(
+          left: 83,
+          right: 20,
+          top: 39,
+          child: Text(
+            titleCase(person.program),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 15,
+              height: 24 / 15,
+              fontWeight: FontWeight.w500,
+              color: AppColors.ink.withValues(alpha: .5),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 27,
+          top: 20,
+          child: Row(
+            children: [
+              Text(
+                'Explore',
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 16 / 12,
+                  fontWeight: FontWeight.w600,
+                  color: faint,
+                ),
+              ),
+              const SizedBox(width: 2),
+              const Padding(
+                padding: EdgeInsets.only(top: 2),
+                child: OverviewChevron(),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          left: 25,
+          top: 77,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Status:',
+                  style: TextStyle(fontWeight: FontWeight.w700, color: dim),
+                ),
+                TextSpan(
+                  text: ' ${person.statusDate}',
+                  style: TextStyle(fontWeight: FontWeight.w500, color: faint),
+                ),
+              ],
+            ),
+            style: const TextStyle(fontSize: 12),
+          ),
+        ),
+        Positioned(
+          left: 28,
+          right: 27,
+          top: 106,
+          bottom: 0,
+          child: _Tracker(completed: person.completedSteps),
+        ),
+      ],
+    );
+  }
+}
+
+/// Labels (y 106), 20px step circles (y 138) and the 8px track (y 144) from
+/// Figma. Circle centres sit at 0 / 33.65 / 62.22 / 100 % of the track.
+class _Tracker extends StatelessWidget {
+  const _Tracker({required this.completed});
+
+  final int completed;
+
+  static const _labels = ['Check-In', 'Focus', 'Activity', 'Reflection'];
+  static const _fractions = [0.0, 106 / 315, 196 / 315, 1.0];
+
+  @override
+  Widget build(BuildContext context) {
+    final done = completed.clamp(0, _labels.length);
+    final labelStyle = TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+      color: AppColors.ink.withValues(alpha: .8),
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        double centre(int i) => 10 + _fractions[i] * (width - 20);
+        // Figma: the fill runs up to the next (current) step's circle.
+        final fillEnd = centre(done.clamp(0, _labels.length - 1));
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              left: 0,
+              top: 0,
+              child: Text(_labels[0], style: labelStyle),
+            ),
+            for (final i in [1, 2])
+              Positioned(
+                left: centre(i),
+                top: 0,
+                child: FractionalTranslation(
+                  translation: const Offset(-.5, 0),
+                  child: Text(_labels[i], style: labelStyle),
+                ),
+              ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Text(_labels[3], style: labelStyle),
+            ),
+            // Track (y 144 -> 38 from the labels' top).
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 38,
+              height: 8,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: .08),
+                          Colors.transparent,
+                        ],
+                        stops: const [0, .35],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            if (done > 0)
+              Positioned(
+                left: 0,
+                width: fillEnd,
+                top: 38,
+                height: 8,
+                child: const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: overviewGradient,
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(20),
+                    ),
+                  ),
+                ),
+              ),
+            for (var i = 0; i < _labels.length; i++)
+              Positioned(
+                left: centre(i) - 12,
+                top: 30,
+                child: _Step(
+                  done: i < done,
+                  next: i == done && i != _labels.length - 1,
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _Step extends StatelessWidget {
+  const _Step({required this.done, required this.next});
+
+  final bool done;
+  final bool next;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 24,
+      height: 24,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: next
+                    ? const Color(0xFFE8777E)
+                    : AppColors.ink.withValues(alpha: .08),
+              ),
+            ),
+          ),
+          if (done) SvgPicture.asset(AppAssets.checkCircle, width: 24, height: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class _GlyphIcon extends StatelessWidget {
+  const _GlyphIcon({
+    required this.asset,
+    required this.left,
+    required this.top,
+    required this.width,
+    required this.height,
+  });
+
+  final String asset;
+  final double left;
+  final double top;
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 24,
+      height: 24,
+      child: Stack(
+        children: [
+          Positioned(
+            left: left,
+            top: top,
+            child: SvgPicture.asset(asset, width: width, height: height),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -152,7 +400,7 @@ class _ActionButton extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
+  final Widget icon;
   final String label;
   final VoidCallback? onTap;
 
@@ -160,29 +408,34 @@ class _ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppPressEffect(
       child: Material(
-        color: const Color(0xFFF7F7F7),
+        color: const Color(0xFFF6F6F6),
         borderRadius: BorderRadius.circular(16),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
           child: SizedBox(
             height: 48,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 21),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    icon,
+                    const SizedBox(width: 5),
+                    Text(
                       label,
                       maxLines: 1,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 24 / 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.ink.withValues(alpha: .8),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

@@ -11,6 +11,7 @@ abstract final class AppRoutes {
   static const youthHome = '/youth/home';
   static const youthWeekly = '/youth/weekly';
   static const youthWeeklyDetail = '/youth/weekly/detail';
+  static const youthEmotionalRegulation = '/youth/emotional-regulation';
   static const youthMoodCheckIn = '/youth/daily/mood-check-in';
   static const youthEmotionalCheckIn = '/youth/daily/emotional-check-in';
   static const youthFocus = '/youth/daily/focus';

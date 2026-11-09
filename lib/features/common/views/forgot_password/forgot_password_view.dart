@@ -1,3 +1,4 @@
+import '../../../../shared/widgets/buttons/app_back_arrow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                           child: IconButton(
                             onPressed: controller.goBack,
                             tooltip: 'Back',
-                            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                            icon: const AppBackArrow(),
                           ),
                         ),
                         Image.asset(AppAssets.logo, width: 150, height: 150),

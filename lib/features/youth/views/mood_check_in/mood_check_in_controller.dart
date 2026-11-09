@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../../../app/routes/app_routes.dart';
 
 class MoodCheckInController extends GetxController {
-  final selectedIndex = 1.obs;
+  final selectedIndex = 3.obs;
 
   void select(int index) => selectedIndex.value = index;
 
