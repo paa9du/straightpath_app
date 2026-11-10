@@ -23,142 +23,162 @@ class EmotionalCheckInView extends GetView<EmotionalCheckInController> {
       child: YouthPageScaffold(
         currentIndex: 0,
         onNavigationTap: controller.onNavigationTap,
-        body: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Text(
-                'Emotional Check-In',
-                style: Theme.of(context).textTheme.headlineSmall,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Text(
+                      'Emotional Check-In',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  DailyTabs(currentIndex: 1, onTap: controller.onDailyTab),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            DailyTabs(currentIndex: 1, onTap: controller.onDailyTab),
-            const SizedBox(height: 24),
-            Text(
-              'How Are You Feeling Right Now?',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 14),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisExtent: 99,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 14,
-              ),
-              itemCount: controller.feelings.length,
-              itemBuilder: (context, index) {
-                return Obx(() {
-                  final feeling = controller.feelings[index];
-                  final active =
-                      controller.selectedFeeling.value == feeling.label;
-                  return InkWell(
-                    onTap: () => controller.selectFeeling(feeling.label),
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        color: active
-                            ? AppColors.yellow.withValues(alpha: .38)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: active
-                              ? AppColors.coral
-                              : AppColors.ink.withValues(alpha: .1),
-                        ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'How Are You Feeling Right Now?',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 14),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisExtent: 99,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 14,
                       ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: -1,
-                            left: 0,
-                            right: 0,
-                            child: Center(
-                              child: SvgPicture.asset(
-                                feeling.assetPath,
-                                width: 72,
-                                height: 72,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 71,
-                            left: 4,
-                            right: 4,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                feeling.label,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Manrope',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.ink.withValues(alpha: .8),
+                      itemCount: controller.feelings.length,
+                      itemBuilder: (context, index) {
+                        return Obx(() {
+                          final feeling = controller.feelings[index];
+                          final active =
+                              controller.selectedFeeling.value == feeling.label;
+                          return InkWell(
+                            onTap: () => controller.selectFeeling(feeling.label),
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                color: active
+                                    ? AppColors.yellow.withValues(alpha: .38)
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: active
+                                      ? AppColors.coral
+                                      : AppColors.ink.withValues(alpha: .1),
                                 ),
                               ),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    top: -1,
+                                    left: 0,
+                                    right: 0,
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        feeling.assetPath,
+                                        width: 72,
+                                        height: 72,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 71,
+                                    left: 4,
+                                    right: 4,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        feeling.label,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontFamily: 'Manrope',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.ink.withValues(alpha: .8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 22),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(text: "What's Influencing This Feeling? "),
+                          TextSpan(
+                            text: '(Optional)',
+                            style: TextStyle(
+                              color: AppColors.ink.withValues(alpha: .35),
                             ),
                           ),
                         ],
                       ),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                  );
-                });
-              },
-            ),
-            const SizedBox(height: 22),
-            Text.rich(
-              TextSpan(
-                children: [
-                  const TextSpan(text: 'What’s Influencing This Feeling? '),
-                  TextSpan(
-                    text: '(Optional)',
-                    style: TextStyle(
-                      color: AppColors.ink.withValues(alpha: .35),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 125,
+                      child: TextField(
+                        controller: controller.noteController,
+                        maxLines: null,
+                        expands: true,
+                        textAlignVertical: TextAlignVertical.top,
+                        style: TextStyle(
+                          fontFamily: 'Manrope',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.ink.withValues(alpha: .8),
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Add A Note Here...',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.ink.withValues(alpha: .4),
+                          ),
+                          fillColor: AppColors.cream,
+                          contentPadding: const EdgeInsets.all(14),
+                          border: _noteBorder,
+                          enabledBorder: _noteBorder,
+                          focusedBorder: _noteBorder,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 125,
-              child: TextField(
-                controller: controller.noteController,
-                maxLines: null,
-                expands: true,
-                textAlignVertical: TextAlignVertical.top,
-                style: TextStyle(
-                  fontFamily: 'Manrope',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.ink.withValues(alpha: .8),
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Add A Note Here...',
-                  hintStyle: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.ink.withValues(alpha: .4),
-                  ),
-                  fillColor: AppColors.cream,
-                  contentPadding: const EdgeInsets.all(14),
-                  border: _noteBorder,
-                  enabledBorder: _noteBorder,
-                  focusedBorder: _noteBorder,
+                    const SizedBox(height: 16),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            AppPrimaryButton(
-              label: 'Continue',
-              onPressed: controller.continueFlow,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: AppPrimaryButton(
+                label: 'Continue',
+                onPressed: controller.continueFlow,
+              ),
             ),
           ],
         ),

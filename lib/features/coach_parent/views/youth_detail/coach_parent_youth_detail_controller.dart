@@ -9,6 +9,12 @@ class CoachParentYouthDetailController extends GetxController {
   final CoachParentFlow flow;
   late final PersonSummary person;
 
+  final trackerStates = [false, false, false, false].obs;
+
+  void toggleTracker(int index) {
+    trackerStates[index] = !trackerStates[index];
+  }
+
   @override
   void onInit() {
     super.onInit();

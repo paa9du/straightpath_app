@@ -16,6 +16,7 @@ class ChatView extends GetView<ChatController> {
           child: ChatContent(
             name: controller.person.name,
             imagePath: controller.person.imagePath,
+            messages: controller.messages,
             messageController: controller.messageController,
             onBack: Get.back,
             onSend: controller.send,

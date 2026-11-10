@@ -24,7 +24,7 @@ class AppPrimaryButton extends StatelessWidget {
       enabled: onPressed != null,
       child: SizedBox(
         width: width,
-        height: 60,
+        height: 50,
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: gradient ? null : AppColors.ink,
@@ -39,7 +39,7 @@ class AppPrimaryButton extends StatelessWidget {
               child: Center(
                 child: Text(
                   label,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 15),
                 ),
               ),
             ),

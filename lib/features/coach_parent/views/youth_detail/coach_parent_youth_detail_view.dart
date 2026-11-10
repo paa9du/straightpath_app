@@ -13,12 +13,14 @@ class CoachParentYouthDetailView extends GetView<CoachParentYouthDetailControlle
     return ResponsiveLayout(
       child: Scaffold(
         body: SafeArea(
-          child: YouthDetailContent(
+          child: Obx(() => YouthDetailContent(
             person: controller.person,
             onBack: Get.back,
             onOpenNotes: controller.openNotes,
             onOpenChat: controller.openChat,
-          ),
+            trackerStates: controller.trackerStates.toList(),
+            onToggleTracker: controller.toggleTracker,
+          )),
         ),
       ),
     );

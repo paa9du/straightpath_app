@@ -16,140 +16,163 @@ class GuidedActivityView extends GetView<GuidedActivityController> {
       child: YouthPageScaffold(
         currentIndex: 0,
         onNavigationTap: controller.onNavigationTap,
-        body: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Text(
-                'Guided Activity',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-            const SizedBox(height: 16),
-            DailyTabs(currentIndex: 3, onTap: controller.onDailyTab),
-            const SizedBox(height: 26),
-            Center(
-              child: Text(
-                'Take This At Your Own Pace.',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(height: 24),
-            const _TimerRing(),
-            const SizedBox(height: 24),
-            // Controls: three 60px buttons, 16px apart (Figma 264:336-338).
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _ControlButton(
-                  glyph: _Glyph.previous,
-                  tooltip: 'Previous step',
-                  onPressed: controller.previousStep,
-                ),
-                const SizedBox(width: 16),
-                Obx(
-                  () => _ControlButton(
-                    glyph: controller.isPlaying.value
-                        ? _Glyph.pause
-                        : _Glyph.play,
-                    tooltip: controller.isPlaying.value ? 'Pause' : 'Play',
-                    filled: true,
-                    onPressed: controller.togglePlayback,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                _ControlButton(
-                  glyph: _Glyph.next,
-                  tooltip: 'Next step',
-                  onPressed: controller.nextStep,
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            // Instruction card lists every step (Figma 259:2035).
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(14, 19, 14, 19),
-              decoration: BoxDecoration(
-                color: AppColors.cream,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.ink.withValues(alpha: .1)),
-              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final step in _steps)
-                    Text(
-                      step,
-                      style: TextStyle(
-                        fontFamily: 'Manrope',
-                        fontSize: 15,
-                        height: 24 / 15,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.ink.withValues(alpha: .8),
-                      ),
+                  Center(
+                    child: Text(
+                      'Guided Activity',
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  DailyTabs(currentIndex: 3, onTap: controller.onDailyTab),
                 ],
               ),
             ),
-            const SizedBox(height: 22),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: controller.finish,
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(60),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      side: const BorderSide(color: AppColors.ink),
-                    ),
-                    child: const FittedBox(
-                      fit: BoxFit.scaleDown,
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 26, 20, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
                       child: Text(
-                        'Skip',
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontFamily: 'Manrope',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.ink,
+                        'Take This At Your Own Pace.',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Obx(() => _TimerRing(
+                          progress: controller.timerProgress,
+                          timeLabel: controller.timeLabel,
+                        )),
+                    const SizedBox(height: 24),
+                    // Controls: three 60px buttons, 16px apart (Figma 264:336-338).
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _ControlButton(
+                          glyph: _Glyph.previous,
+                          tooltip: 'Previous step',
+                          onPressed: controller.previousStep,
+                        ),
+                        const SizedBox(width: 16),
+                        Obx(
+                          () => _ControlButton(
+                            glyph: controller.isPlaying.value
+                                ? _Glyph.pause
+                                : _Glyph.play,
+                            tooltip: controller.isPlaying.value ? 'Pause' : 'Play',
+                            filled: true,
+                            onPressed: controller.togglePlayback,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        _ControlButton(
+                          glyph: _Glyph.next,
+                          tooltip: 'Next step',
+                          onPressed: controller.nextStep,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    // Instruction card lists every step (Figma 259:2035).
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(14, 19, 14, 19),
+                      decoration: BoxDecoration(
+                        color: AppColors.cream,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.ink.withValues(alpha: .1)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final step in _steps)
+                            Text(
+                              step,
+                              style: TextStyle(
+                                fontFamily: 'Manrope',
+                                fontSize: 15,
+                                height: 24 / 15,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.ink.withValues(alpha: .8),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: controller.finish,
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        side: const BorderSide(color: AppColors.ink),
+                      ),
+                      child: const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Skip',
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.ink,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: controller.finish,
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(60),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: controller.finish,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        backgroundColor: AppColors.ink.withValues(alpha: .8),
                       ),
-                      backgroundColor: AppColors.ink.withValues(alpha: .8),
-                    ),
-                    child: const FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        'Mark As Complete',
-                        maxLines: 1,
-                        softWrap: false,
-                        style: TextStyle(
-                          fontFamily: 'Manrope',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                      child: const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Mark As Complete',
+                          maxLines: 1,
+                          softWrap: false,
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -165,10 +188,12 @@ class GuidedActivityView extends GetView<GuidedActivityController> {
   ];
 }
 
-/// 258px timer ring (Figma 264:341): 26px stroke, yellow arc from 3 o'clock
-/// for 75 %, `#F6F6F6` track, "2:30 / Sec" centred.
+/// 258px timer ring: live progress, formatted time label in the centre.
 class _TimerRing extends StatelessWidget {
-  const _TimerRing();
+  const _TimerRing({required this.progress, required this.timeLabel});
+
+  final double progress;
+  final String timeLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -180,13 +205,13 @@ class _TimerRing extends StatelessWidget {
             width: size,
             height: size,
             child: CustomPaint(
-              painter: const _TimerRingPainter(progress: .75),
+              painter: _TimerRingPainter(progress: progress),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '2:30',
+                      timeLabel,
                       style: TextStyle(
                         fontFamily: 'Manrope',
                         fontSize: 36,
@@ -233,8 +258,7 @@ class _TimerRingPainter extends CustomPainter {
       ..color = const Color(0xFFF5B84A);
     const full = 6.283185307179586;
     canvas.drawArc(rect, 0, full, false, track);
-    // Starts at 3 o'clock and runs clockwise, leaving the top-right gap.
-    canvas.drawArc(rect, 0, full * progress, false, arc);
+    canvas.drawArc(rect, -1.5707963267948966, -(full * progress), false, arc);
   }
 
   @override
@@ -330,7 +354,6 @@ class _GlyphPainter extends CustomPainter {
           paint,
         );
       case _Glyph.pause:
-        // Figma icon box is inset 34.4 % / 9.4 %, stroke included.
         canvas.drawLine(const Offset(9, 3), const Offset(9, 21), paint);
         canvas.drawLine(const Offset(15, 3), const Offset(15, 21), paint);
       case _Glyph.play:

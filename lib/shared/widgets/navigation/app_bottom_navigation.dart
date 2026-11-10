@@ -32,76 +32,110 @@ class AppBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 82,
+    return ColoredBox(
       color: const Color(0xFFF2F2F2),
-      padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
-      child: Row(
-        children: List.generate(items.length, (index) {
-          final item = items[index];
-          final isActive = index == currentIndex;
-          Widget svg(String asset) => SvgPicture.asset(
-                asset,
-                width: 24,
-                height: 24,
-                colorFilter: isActive
-                    ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
-                    : const ColorFilter.mode(_iconIdle, BlendMode.srcIn),
-              );
-          // Falls back to the regular icon if the filled variant can't load.
-          Widget icon = isActive && item.activeIconAsset != null
-              ? SvgPicture.asset(
-                  item.activeIconAsset!,
-                  width: 24,
-                  height: 24,
-                  colorFilter:
-                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                  errorBuilder: (context, error, stack) =>
-                      svg(item.iconAsset),
-                )
-              : svg(item.iconAsset);
-          if (isActive) {
-            icon = ShaderMask(
-              blendMode: BlendMode.srcIn,
-              shaderCallback: (rect) => const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFFF5B84A), Color(0xFFFF6464)],
-              ).createShader(rect),
-              child: icon,
-            );
-          }
-          return Expanded(
-            child: AppPressEffect(
-              child: InkWell(
-                onTap: () => onTap(index),
-                borderRadius: BorderRadius.circular(14),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 2),
-                    icon,
-                    const SizedBox(height: 4),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        item.label,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontFamily: 'Manrope',
-                          fontSize: 13,
-                          fontWeight:
-                              isActive ? FontWeight.w800 : FontWeight.w400,
-                          color: _ink.withValues(alpha: .8),
-                        ),
+      child: SafeArea(
+        top: false,
+        left: false,
+        right: false,
+        child: SizedBox(
+          height: 82,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 12, 8, 5),
+            child: Row(
+              children: List.generate(items.length, (index) {
+                final item = items[index];
+                final isActive = index == currentIndex;
+
+                Widget svg(String asset) => SvgPicture.asset(
+                      asset,
+                      width: 24,
+                      height: 24,
+                      colorFilter: isActive
+                          ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                          : const ColorFilter.mode(_iconIdle, BlendMode.srcIn),
+                    );
+
+                Widget icon = isActive && item.activeIconAsset != null
+                    ? SvgPicture.asset(
+                        item.activeIconAsset!,
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.white, BlendMode.srcIn),
+                        errorBuilder: (context, error, stack) =>
+                            svg(item.iconAsset),
+                      )
+                    : svg(item.iconAsset);
+
+                if (isActive) {
+                  icon = ShaderMask(
+                    blendMode: BlendMode.srcIn,
+                    shaderCallback: (rect) => const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xFFF5B84A), Color(0xFFFF6464)],
+                    ).createShader(rect),
+                    child: icon,
+                  );
+                }
+
+                return Expanded(
+                  child: AppPressEffect(
+                    child: InkWell(
+                      onTap: () => onTap(index),
+                      borderRadius: BorderRadius.circular(14),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 2),
+                          icon,
+                          const SizedBox(height: 6),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: isActive
+                                ? ShaderMask(
+                                    blendMode: BlendMode.srcIn,
+                                    shaderCallback: (rect) =>
+                                        const LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Color(0xFFF5B84A),
+                                        Color(0xFFFF6464),
+                                      ],
+                                    ).createShader(rect),
+                                    child: Text(
+                                      item.label,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontFamily: 'Manrope',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    item.label,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Manrope',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: _ink.withValues(alpha: .8),
+                                    ),
+                                  ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }

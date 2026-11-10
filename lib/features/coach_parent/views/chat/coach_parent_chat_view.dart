@@ -16,6 +16,7 @@ class CoachParentChatView extends GetView<CoachParentChatController> {
           child: ChatContent(
             name: controller.person.name,
             imagePath: controller.person.imagePath,
+            messages: controller.messages,
             messageController: controller.messageController,
             onBack: Get.back,
             onSend: controller.send,

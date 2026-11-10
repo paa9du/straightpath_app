@@ -19,6 +19,8 @@ class YouthDetailContent extends StatelessWidget {
     required this.onBack,
     required this.onOpenNotes,
     this.onOpenChat,
+    this.trackerStates,
+    this.onToggleTracker,
     super.key,
   });
 
@@ -26,6 +28,8 @@ class YouthDetailContent extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onOpenNotes;
   final VoidCallback? onOpenChat;
+  final List<bool>? trackerStates;
+  final void Function(int)? onToggleTracker;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +82,10 @@ class YouthDetailContent extends StatelessWidget {
                     const SizedBox(height: 22.15),
                     const _SectionTitle('Daily Progress Tracker'),
                     const SizedBox(height: 9.3),
-                    const _DailyTrackerBox(completed: 1),
+                    _DailyTrackerBox(
+                      states: trackerStates ?? [false, false, false, false],
+                      onToggle: onToggleTracker,
+                    ),
                   ],
                 ),
               ),
@@ -530,9 +537,13 @@ class _MoodBox extends StatelessWidget {
 }
 
 class _DailyTrackerBox extends StatelessWidget {
-  const _DailyTrackerBox({required this.completed});
+  const _DailyTrackerBox({
+    required this.states,
+    this.onToggle,
+  });
 
-  final int completed;
+  final List<bool> states;
+  final void Function(int)? onToggle;
 
   static const _labels = ['Check-In', 'Focus', 'Activity', 'Reflection'];
   static const _fractions = [0.0, 106 / 315, 196 / 315, 1.0];
@@ -540,12 +551,16 @@ class _DailyTrackerBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final done = completed.clamp(0, _labels.length);
     final labelStyle = TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w600,
       color: AppColors.ink.withValues(alpha: .8),
     );
+    // fill track up to the rightmost completed step
+    int lastDone = -1;
+    for (int i = states.length - 1; i >= 0; i--) {
+      if (states[i]) { lastDone = i; break; }
+    }
     return Container(
       height: 92.3,
       width: double.infinity,
@@ -556,25 +571,27 @@ class _DailyTrackerBox extends StatelessWidget {
           const rightPad = 26.8;
           final trackW = c.maxWidth - left - rightPad;
           double centre(int i) => left + _d / 2 + _fractions[i] * (trackW - _d);
-          final fillEnd = centre(done.clamp(0, _labels.length - 1));
+          final fillEnd = lastDone >= 0 ? centre(lastDone) : centre(0);
           return Stack(
             clipBehavior: Clip.none,
             children: [
-              Positioned(left: 17.5, top: 17.5, child: Text(_labels[0], style: labelStyle)),
+              // Label row
+              Positioned(left: 17.5, top: 17.5, child: _LabelTap(label: _labels[0], onTap: onToggle != null ? () => onToggle!(0) : null, style: labelStyle)),
               for (final i in [1, 2])
                 Positioned(
                   left: centre(i),
                   top: 17.5,
                   child: FractionalTranslation(
                     translation: const Offset(-.5, 0),
-                    child: Text(_labels[i], style: labelStyle),
+                    child: _LabelTap(label: _labels[i], onTap: onToggle != null ? () => onToggle!(i) : null, style: labelStyle),
                   ),
                 ),
               Positioned(
                 right: rightPad - 7.4,
                 top: 17.5,
-                child: Text(_labels[3], style: labelStyle),
+                child: _LabelTap(label: _labels[3], onTap: onToggle != null ? () => onToggle!(3) : null, style: labelStyle),
               ),
+              // Track background
               Positioned(
                 left: left,
                 width: trackW,
@@ -603,7 +620,8 @@ class _DailyTrackerBox extends StatelessWidget {
                   ),
                 ),
               ),
-              if (done > 0)
+              // Fill
+              if (lastDone >= 0)
                 Positioned(
                   left: left,
                   width: fillEnd - left,
@@ -618,36 +636,40 @@ class _DailyTrackerBox extends StatelessWidget {
                     ),
                   ),
                 ),
+              // Dots
               for (var i = 0; i < _labels.length; i++)
                 Positioned(
                   left: centre(i) - 11.08,
                   top: 45.23,
-                  child: SizedBox(
-                    width: 22.15,
-                    height: 22.15,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: _d,
-                          height: _d,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: i == done && i != _labels.length - 1
-                                  ? const Color(0xFFE8777E)
-                                  : AppColors.ink.withValues(alpha: .08),
+                  child: GestureDetector(
+                    onTap: onToggle != null ? () => onToggle!(i) : null,
+                    child: SizedBox(
+                      width: 22.15,
+                      height: 22.15,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: _d,
+                            height: _d,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: !states[i] && (i == 0 || states[i - 1])
+                                    ? const Color(0xFFE8777E)
+                                    : AppColors.ink.withValues(alpha: .08),
+                              ),
                             ),
                           ),
-                        ),
-                        if (i < done)
-                          SvgPicture.asset(
-                            AppAssets.checkCircle,
-                            width: 22.15,
-                            height: 22.15,
-                          ),
-                      ],
+                          if (states[i])
+                            SvgPicture.asset(
+                              AppAssets.checkCircle,
+                              width: 22.15,
+                              height: 22.15,
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -655,6 +677,21 @@ class _DailyTrackerBox extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _LabelTap extends StatelessWidget {
+  const _LabelTap({required this.label, required this.style, this.onTap});
+  final String label;
+  final TextStyle style;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Text(label, style: style),
     );
   }
 }

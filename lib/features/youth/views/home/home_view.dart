@@ -47,77 +47,97 @@ class HomeView extends GetView<HomeController> {
           child: Column(
             children: [
               Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _UserHeader(),
-                    const SizedBox(height: 20),
-                    DailyTabs(currentIndex: 0, onTap: controller.onDailyTab),
-                    const SizedBox(height: 18),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Course Progress',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.ink.withValues(alpha: .8),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: controller.openWeeklyProgress,
-                          borderRadius: BorderRadius.circular(8),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 6,
-                            ),
-                            child: Text(
-                              'See More',
-                              style: TextStyle(
-                                fontFamily: 'Manrope',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.ink.withValues(alpha: .3),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    _CourseProgressCard(onContinue: controller.openLessons),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Mood Check-In',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 9),
-                    Obx(
-                      () => MoodSelector(
-                        moods: controller.moods,
-                        selectedIndex: controller.selectedMoodIndex.value,
-                        onSelected: controller.selectMood,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _UserHeader(),
+                          const SizedBox(height: 20),
+                          DailyTabs(currentIndex: 0, onTap: controller.onDailyTab),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Daily Progress Tracker',
-                      style: Theme.of(context).textTheme.titleMedium,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Course Progress',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Manrope',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.ink.withValues(alpha: .8),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: controller.openWeeklyProgress,
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                      vertical: 6,
+                                    ),
+                                    child: Text(
+                                      'See More',
+                                      style: TextStyle(
+                                        fontFamily: 'Manrope',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.ink.withValues(alpha: .3),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            _CourseProgressCard(onContinue: controller.openLessons),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Mood Check-In',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 9),
+                            Obx(
+                              () => MoodSelector(
+                                moods: controller.moods,
+                                selectedIndex: controller.selectedMoodIndex.value,
+                                onSelected: controller.selectMood,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Daily Progress Tracker',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 9),
+                            const DailyProgressTracker(completedSteps: 1),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 9),
-                    const DailyProgressTracker(completedSteps: 1),
-                    const SizedBox(height: 18),
-                    AppPrimaryButton(
-                      label: 'Start Today',
-                      gradient: true,
-                      onPressed: controller.startToday,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
+                      child: AppPrimaryButton(
+                        label: 'Start Today',
+                        gradient: true,
+                        onPressed: controller.startToday,
+                      ),
                     ),
                   ],
                 ),

@@ -16,22 +16,22 @@ class FocusView extends GetView<FocusController> {
     (
       'Stress',
       'Noticing Stress Without Judgment',
-      'Stress can show up in many ways.\nSometimes it feels loud—like tension, restlessness, or worry. Other times, it’s quiet, sitting in the background while you try to get through the day.\n\nToday’s focus is simply to notice stress when it appears.\nYou don’t need to fix it or push it away. Just recognizing it creates a small pause, and that pause can make things feel a little more manageable.\n\nIf you find yourself thinking, “I shouldn’t feel like this,” gently let that thought go. Stress isn’t a weakness. It’s a signal that something inside you is asking for care.\n\nAs you move through today, check in once or twice.\nAsk yourself: What am I noticing right now?\nAwareness alone is a meaningful step.',
+      'Stress can show up in many ways.\nSometimes it feels loud—like tension, restlessness, or worry. Other times, it\'s quiet, sitting in the background while you try to get through the day.\n\nToday\'s focus is simply to notice stress when it appears.\nYou don\'t need to fix it or push it away. Just recognizing it creates a small pause, and that pause can make things feel a little more manageable.\n\nIf you find yourself thinking, "I shouldn\'t feel like this," gently let that thought go. Stress isn\'t a weakness. It\'s a signal that something inside you is asking for care.\n\nAs you move through today, check in once or twice.\nAsk yourself: What am I noticing right now?\nAwareness alone is a meaningful step.',
     ),
     (
       'Anger',
       'Understanding Anger As Information',
-      'Anger often gets labeled as a “bad” emotion, but it’s really just information.\nIt can show up when something feels unfair, unsafe, or out of your control.\n\nToday’s focus is to notice anger without judging it.\nYou don’t have to act on it, and you don’t have to suppress it. Simply noticing where it lives in your body or thoughts can help slow things down.\n\nIf anger feels intense, that doesn’t mean you’re doing something wrong.\nIt means something matters to you. Listening to that message—without reacting—gives you more choice in what comes next.\n\nAs the day goes on, try asking:\nWhat is this feeling trying to tell me?\nYou don’t need an answer right away. Noticing is enough.',
+      'Anger often gets labeled as a "bad" emotion, but it\'s really just information.\nIt can show up when something feels unfair, unsafe, or out of your control.\n\nToday\'s focus is to notice anger without judging it.\nYou don\'t have to act on it, and you don\'t have to suppress it. Simply noticing where it lives in your body or thoughts can help slow things down.\n\nIf anger feels intense, that doesn\'t mean you\'re doing something wrong.\nIt means something matters to you. Listening to that message—without reacting—gives you more choice in what comes next.\n\nAs the day goes on, try asking:\nWhat is this feeling trying to tell me?\nYou don\'t need an answer right away. Noticing is enough.',
     ),
     (
       'Motivation',
       'Finding Small Reasons To Begin',
-      'Motivation doesn’t always arrive as energy or excitement.\nSometimes it shows up quietly—or not at all—and that can make starting feel difficult.\n\nToday’s focus is on taking small steps, even when motivation feels low.\nYou don’t need to feel ready. Action can come first, and motivation can follow later.\n\nIf you notice thoughts like, “What’s the point?” or “I can’t do this,” pause and soften them. You’re not failing. You’re human, and starting small still counts.\n\nAs you move through today, look for one simple reason to begin—just one.\nA small step is still movement forward.',
+      'Motivation doesn\'t always arrive as energy or excitement.\nSometimes it shows up quietly—or not at all—and that can make starting feel difficult.\n\nToday\'s focus is on taking small steps, even when motivation feels low.\nYou don\'t need to feel ready. Action can come first, and motivation can follow later.\n\nIf you notice thoughts like, "What\'s the point?" or "I can\'t do this," pause and soften them. You\'re not failing. You\'re human, and starting small still counts.\n\nAs you move through today, look for one simple reason to begin—just one.\nA small step is still movement forward.',
     ),
     (
       'Focus',
       'Bringing Attention Back Gently',
-      'Focus isn’t about forcing your mind to stay still.\nIt’s about noticing when your attention drifts—and bringing it back without frustration.\n\nToday’s focus is to practice returning your attention gently.\nWhen your thoughts wander, that’s not a mistake. It’s part of how the mind works.\n\nEach time you notice distraction and come back to what you’re doing, you’re building focus. Even if it happens many times, each return matters.\n\nAs you go through today, try this question:\nWhere is my attention right now?\nNo judgment—just noticing and returning.',
+      'Focus isn\'t about forcing your mind to stay still.\nIt\'s about noticing when your attention drifts—and bringing it back without frustration.\n\nToday\'s focus is to practice returning your attention gently.\nWhen your thoughts wander, that\'s not a mistake. It\'s part of how the mind works.\n\nEach time you notice distraction and come back to what you\'re doing, you\'re building focus. Even if it happens many times, each return matters.\n\nAs you go through today, try this question:\nWhere is my attention right now?\nNo judgment—just noticing and returning.',
     ),
   ];
 
@@ -41,27 +41,41 @@ class FocusView extends GetView<FocusController> {
       child: YouthPageScaffold(
         currentIndex: 0,
         onNavigationTap: controller.onNavigationTap,
-        body: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Text(
-                'Focus',
-                style: Theme.of(context).textTheme.headlineSmall,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Text(
+                      'Focus',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  DailyTabs(currentIndex: 2, onTap: controller.onDailyTab),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            DailyTabs(currentIndex: 2, onTap: controller.onDailyTab),
-            const SizedBox(height: 20),
-            for (final section in sections)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: _FocusSection(
-                  band: section.$1,
-                  heading: section.$2,
-                  body: section.$3,
-                ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                children: [
+                  for (final section in sections)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: _FocusSection(
+                        band: section.$1,
+                        heading: section.$2,
+                        body: section.$3,
+                      ),
+                    ),
+                ],
               ),
+            ),
           ],
         ),
       ),

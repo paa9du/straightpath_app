@@ -56,12 +56,13 @@ class _DailyTabsState extends State<DailyTabs> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 30,
+      height: 38,
       child: SingleChildScrollView(
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: List.generate(DailyTabs.labels.length, (index) {
             final active = index == widget.currentIndex;
             final isLast = index == DailyTabs.labels.length - 1;
@@ -69,16 +70,18 @@ class _DailyTabsState extends State<DailyTabs> {
               selected: active,
               button: true,
               child: AppPressEffect(
-                child: InkWell(
+                child: GestureDetector(
                   onTap: () => widget.onTap(index),
                   child: Container(
-                    margin: EdgeInsets.only(right: isLast ? 0 : 16),
-                    padding: const EdgeInsets.only(bottom: 4),
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(right: isLast ? 0 : 24),
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          width: 2,
-                          color: active ? AppColors.coral : Colors.transparent,
+                          width: 2.5,
+                          color: active
+                              ? AppColors.coral
+                              : Colors.transparent,
                         ),
                       ),
                     ),
@@ -87,11 +90,12 @@ class _DailyTabsState extends State<DailyTabs> {
                       maxLines: 1,
                       style: TextStyle(
                         fontFamily: 'Manrope',
-                        fontSize: active ? 14 : 12,
-                        fontWeight: active ? FontWeight.w800 : FontWeight.w400,
+                        fontSize: 14,
+                        fontWeight:
+                            active ? FontWeight.w700 : FontWeight.w500,
                         color: active
                             ? AppColors.coral
-                            : AppColors.ink.withValues(alpha: .8),
+                            : AppColors.ink.withValues(alpha: .45),
                       ),
                     ),
                   ),
