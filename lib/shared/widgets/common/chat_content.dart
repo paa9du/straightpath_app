@@ -1,14 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../../core/constants/app_assets.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/app_interaction_feedback.dart';
-import '../buttons/app_back_arrow.dart';
 
 final _fieldBorder = OutlineInputBorder(
-  borderRadius: BorderRadius.circular(22),
-  borderSide: BorderSide(color: AppColors.ink.withValues(alpha: .1)),
+  borderRadius: BorderRadius.circular(8.75),
+  borderSide: BorderSide(
+    color: AppColors.ink.withValues(alpha: .1),
+    width: 1.09,
+  ),
 );
+
+/// 26.26px Figma icon, vertically centred on the 43.77px input box.
+class _InputIcon extends StatelessWidget {
+  const _InputIcon({
+    required this.asset,
+    required this.label,
+    required this.onTap,
+  });
+
+  final String asset;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: label,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: SizedBox(
+          height: 43.77,
+          child: Center(
+            child: SvgPicture.asset(asset, width: 26.26, height: 26.26),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class ChatMessage {
   const ChatMessage({required this.text, required this.mine, required this.time});
@@ -39,57 +74,82 @@ class ChatContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // ── Header ────────────────────────────────────────────────────────────
-        SizedBox(
-          height: 60,
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: onBack,
-                tooltip: 'Back',
-                icon: const AppBackArrow(),
-              ),
-              ClipOval(
-                child: Image.asset(
-                  imagePath,
-                  width: 42,
-                  height: 42,
-                  fit: BoxFit.cover,
+        // ── Header (Figma 475:1398) ───────────────────────────────────────────
+        // Chevron 26.26, avatar 43.77, name Bold 17.5, dots 17.5,
+        // 26.26 side padding, #EAEAEA bottom line.
+        Container(
+          // Right is 4 less so the dots (with their 4px tap padding) sit
+          // on the Figma edge.
+          padding: const EdgeInsets.fromLTRB(26.26, 8, 22.26, 10),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(color: Color(0xFFEAEAEA), width: 1.09),
+            ),
+          ),
+          child: SizedBox(
+            height: 45.95,
+            child: Row(
+              children: [
+                Semantics(
+                  button: true,
+                  label: 'Back',
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: onBack,
+                    child: SvgPicture.asset(
+                      AppAssets.chatBack,
+                      width: 26.26,
+                      height: 26.26,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(name, style: const TextStyle(
+                const SizedBox(width: 17.51),
+                ClipOval(
+                  child: Image.asset(
+                    imagePath,
+                    width: 43.77,
+                    height: 43.77,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 8.75),
+                Expanded(
+                  child: Text(
+                    name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontFamily: 'Manrope',
-                      fontSize: 16,
+                      fontSize: 17.51,
+                      height: 26.26 / 17.51,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFF101720),
-                    )),
-                    Text('Online', style: TextStyle(
-                      fontFamily: 'Manrope',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF101720).withValues(alpha: .4),
-                    )),
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-              Builder(
-                builder: (btnCtx) => IconButton(
-                  onPressed: () => _showChatMenu(btnCtx),
-                  tooltip: 'Conversation options',
-                  icon: const Icon(Icons.more_vert),
+                Builder(
+                  builder: (btnCtx) => Semantics(
+                    button: true,
+                    label: 'Conversation options',
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _showChatMenu(btnCtx),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: SvgPicture.asset(
+                          AppAssets.chatDots,
+                          width: 17.51,
+                          height: 17.51,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 4),
-            ],
+              ],
+            ),
           ),
         ),
-        const Divider(height: 1),
 
         // ── Messages list ─────────────────────────────────────────────────────
         Expanded(
@@ -116,63 +176,63 @@ class ChatContent extends StatelessWidget {
                 )),
         ),
 
-        // ── Input bar ─────────────────────────────────────────────────────────
+        // ── Input bar (Figma 475:1417) ────────────────────────────────────────
+        // Plus 26.26 · 17.5 gap · white box (43.77 tall, 8.75 radius,
+        // 10% ink border, "Type something") · 17.5 gap · camera 26.26.
         Container(
-          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          padding: const EdgeInsets.fromLTRB(27, 17.51, 25.5, 17.51),
           decoration: const BoxDecoration(
             color: Colors.white,
-            border: Border(top: BorderSide(color: AppColors.divider)),
+            border: Border(
+              top: BorderSide(color: Color(0xFFEAEAEA), width: 1.09),
+            ),
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // + attachment button
-              InkWell(
+              // + attachment button (Figma 475:1419)
+              _InputIcon(
+                asset: AppAssets.chatPlus,
+                label: 'Add attachment',
                 onTap: () => AppInteractionFeedback.showOptions(
                   context,
                   title: 'Add Attachment',
                   options: const ['Photo', 'Document', 'Camera'],
                 ),
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColors.ink.withValues(alpha: .07),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    size: 20,
-                    color: AppColors.ink.withValues(alpha: .7),
-                  ),
-                ),
               ),
-              const SizedBox(width: 10),
-              // Text field
+              const SizedBox(width: 17.51),
+              // Text field (Figma 475:1422)
               Expanded(
                 child: TextField(
                   controller: messageController,
                   style: TextStyle(
                     fontFamily: 'Manrope',
-                    fontSize: 14,
+                    fontSize: 15.32,
                     color: AppColors.ink.withValues(alpha: .85),
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Type a message...',
+                    hintText: 'Type something',
                     hintStyle: TextStyle(
                       fontFamily: 'Manrope',
-                      fontSize: 14,
-                      color: AppColors.ink.withValues(alpha: .4),
+                      fontSize: 15.32,
+                      color: AppColors.ink.withValues(alpha: .5),
                     ),
                     filled: true,
-                    fillColor: const Color(0xFFF6F6F6),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
+                    fillColor: Colors.white,
+                    constraints: const BoxConstraints(minHeight: 43.77),
+                    contentPadding: const EdgeInsets.fromLTRB(
+                      25.17,
+                      11.5,
+                      16,
+                      11.5,
+                    ),
                     border: _fieldBorder,
                     enabledBorder: _fieldBorder,
                     focusedBorder: _fieldBorder.copyWith(
                       borderSide: BorderSide(
-                          color: AppColors.ink.withValues(alpha: .25)),
+                        color: AppColors.ink.withValues(alpha: .25),
+                        width: 1.09,
+                      ),
                     ),
                     isDense: true,
                   ),
@@ -182,34 +242,13 @@ class ChatContent extends StatelessWidget {
                   minLines: 1,
                 ),
               ),
-              const SizedBox(width: 10),
-              // Send button
-              ValueListenableBuilder<TextEditingValue>(
-                valueListenable: messageController,
-                builder: (context, value, child) {
-                  final hasText = value.text.trim().isNotEmpty;
-                  return GestureDetector(
-                    onTap: hasText ? onSend : null,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: hasText
-                            ? AppColors.ink
-                            : AppColors.ink.withValues(alpha: .12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.send_rounded,
-                        size: 18,
-                        color: hasText
-                            ? Colors.white
-                            : AppColors.ink.withValues(alpha: .3),
-                      ),
-                    ),
-                  );
-                },
+              const SizedBox(width: 17.51),
+              // Camera button (Figma 475:1431). Messages are sent with the
+              // keyboard's send action.
+              _InputIcon(
+                asset: AppAssets.camera,
+                label: 'Camera',
+                onTap: () => AppInteractionFeedback.showInfo(context, 'Camera'),
               ),
             ],
           ),

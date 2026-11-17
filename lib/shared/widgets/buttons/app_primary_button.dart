@@ -10,13 +10,27 @@ class AppPrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.gradient = false,
     this.width = double.infinity,
+    this.height = 50,
+    this.color,
+    this.textStyle,
+    this.radius,
     super.key,
   });
+
+  /// Corner radius; defaults to [AppRadii.card].
+  final double? radius;
+
+  /// Overrides the label style; defaults to `labelLarge` at 15px.
+  final TextStyle? textStyle;
+
+  /// Solid background; defaults to [AppColors.ink]. Ignored when [gradient].
+  final Color? color;
 
   final String label;
   final VoidCallback? onPressed;
   final bool gradient;
   final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +38,23 @@ class AppPrimaryButton extends StatelessWidget {
       enabled: onPressed != null,
       child: SizedBox(
         width: width,
-        height: 50,
+        height: height,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: gradient ? null : AppColors.ink,
+            color: gradient ? null : (color ?? AppColors.ink),
             gradient: gradient ? AppColors.primaryGradient : null,
-            borderRadius: BorderRadius.circular(AppRadii.card),
+            borderRadius: BorderRadius.circular(radius ?? AppRadii.card),
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: onPressed,
-              borderRadius: BorderRadius.circular(AppRadii.card),
+              borderRadius: BorderRadius.circular(radius ?? AppRadii.card),
               child: Center(
                 child: Text(
                   label,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 15),
+                  style: textStyle ??
+                      Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 15),
                 ),
               ),
             ),

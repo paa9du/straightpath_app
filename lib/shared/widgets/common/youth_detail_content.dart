@@ -571,7 +571,11 @@ class _DailyTrackerBox extends StatelessWidget {
           const rightPad = 26.8;
           final trackW = c.maxWidth - left - rightPad;
           double centre(int i) => left + _d / 2 + _fractions[i] * (trackW - _d);
-          final fillEnd = lastDone >= 0 ? centre(lastDone) : centre(0);
+          // Figma: the fill runs from the first dot to the current step
+          // (the one after the last completed step).
+          final fillEnd = lastDone >= 0
+              ? centre(math.min(lastDone + 1, _labels.length - 1))
+              : centre(0);
           return Stack(
             clipBehavior: Clip.none,
             children: [

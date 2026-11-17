@@ -42,6 +42,10 @@ abstract final class AppAssets {
   static const notes = 'assets/icons/notes.svg';
   static const addNote = 'assets/icons/add_note.svg';
   static const sendMessage = 'assets/icons/send_message.svg';
+  static const camera = 'assets/icons/camera.svg';
+  static const chatBack = 'assets/icons/chat_back.svg';
+  static const chatDots = 'assets/icons/chat_dots.svg';
+  static const chatPlus = 'assets/icons/chat_plus.svg';
   static const checkCircle = 'assets/icons/check_circle.svg';
   static const chevronRight = 'assets/icons/chevron_right.svg';
   static const chevronDown24 = 'assets/icons/chevron_down_24.svg';
@@ -56,4 +60,18 @@ abstract final class AppAssets {
   static const privacy = 'assets/icons/privacy.svg';
   static const terms = 'assets/icons/terms.svg';
   static const delete = 'assets/icons/delete.svg';
+
+  // Week overview (Figma 147)
+  static const weekCalendar = 'assets/icons/week_calendar.svg';
+  static const goalsTarget = 'assets/icons/goals_target.svg';
+  static const goalCheck = 'assets/icons/goal_check.svg';
+  static const trophy = 'assets/images/trophy.png';
+
+  // Day completed / questions (Figma 148, 149)
+  static const dayCompletedCheck = 'assets/icons/day_completed_check.svg';
+  static const keyInsightBulb = 'assets/icons/key_insight_bulb.svg';
+  static const chipCheck = 'assets/icons/chip_check.svg';
+  static const partDoneCheck = 'assets/icons/part_done_check.svg';
+  static const questionsCalendar = 'assets/icons/questions_calendar.svg';
+  static const questionChevron = 'assets/icons/question_chevron.svg';
 }

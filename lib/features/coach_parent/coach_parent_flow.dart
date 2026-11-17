@@ -18,6 +18,7 @@ class CoachParentFlow {
     required this.profileImage,
     required this.profileProgram,
     required this.canAddYouth,
+    required this.showConnectWithCoach,
   });
 
   /// Switches bottom-navigation tab: `(currentIndex, targetIndex)`.
@@ -32,6 +33,9 @@ class CoachParentFlow {
   final String profileProgram;
   final bool canAddYouth;
 
+  /// Parent-only "Connect With Coach" button on the youth detail screen.
+  final bool showConnectWithCoach;
+
   static final coach = CoachParentFlow._(
     navigate: FlowNavigation.coach,
     youthDetailRoute: AppRoutes.coachYouthDetail,
@@ -43,6 +47,7 @@ class CoachParentFlow {
     profileImage: AppAssets.rick,
     profileProgram: 'Wellness Program',
     canAddYouth: true,
+    showConnectWithCoach: false,
   );
 
   static final parent = CoachParentFlow._(
@@ -56,5 +61,6 @@ class CoachParentFlow {
     profileImage: AppAssets.profileAvatar,
     profileProgram: 'Parent',
     canAddYouth: true,
+    showConnectWithCoach: true,
   );
 }

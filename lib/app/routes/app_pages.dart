@@ -46,6 +46,9 @@ import '../../features/youth/views/weekly/weekly_binding.dart';
 import '../../features/youth/views/weekly/weekly_view.dart';
 import '../../features/youth/views/weekly_detail/weekly_detail_binding.dart';
 import '../../features/youth/views/weekly_detail/weekly_detail_view.dart';
+import '../../features/youth/views/weekly_day/weekly_day_bindings.dart';
+import '../../features/youth/views/weekly_day/weekly_day_completed_view.dart';
+import '../../features/youth/views/weekly_day/weekly_day_questions_view.dart';
 import 'app_routes.dart';
 import '../../features/coach_parent/views/home/coach_parent_home_binding.dart';
 import '../../features/coach_parent/views/home/coach_parent_home_view.dart';
@@ -133,6 +136,16 @@ abstract final class AppPages {
       name: AppRoutes.youthWeeklyDetail,
       page: WeeklyDetailView.new,
       binding: WeeklyDetailBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.youthWeeklyDayCompleted,
+      page: WeeklyDayCompletedView.new,
+      binding: WeeklyDayCompletedBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.youthWeeklyDayQuestions,
+      page: WeeklyDayQuestionsView.new,
+      binding: WeeklyDayQuestionsBinding(),
     ),
     GetPage(
       name: AppRoutes.youthMoodCheckIn,

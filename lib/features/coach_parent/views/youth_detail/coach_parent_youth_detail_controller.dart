@@ -9,7 +9,8 @@ class CoachParentYouthDetailController extends GetxController {
   final CoachParentFlow flow;
   late final PersonSummary person;
 
-  final trackerStates = [false, false, false, false].obs;
+  // Figma 766-1814/1816: Check-In done, Focus is the current step.
+  final trackerStates = [true, false, false, false].obs;
 
   void toggleTracker(int index) {
     trackerStates[index] = !trackerStates[index];
@@ -25,4 +26,7 @@ class CoachParentYouthDetailController extends GetxController {
 
   void openNotes() => Get.toNamed(flow.noteHistoryRoute, arguments: person);
   void openChat() => Get.toNamed(flow.chatRoute, arguments: person);
+
+  bool get showConnectWithCoach => flow.showConnectWithCoach;
+  void connectWithCoach() => Get.toNamed(flow.chatRoute, arguments: person);
 }

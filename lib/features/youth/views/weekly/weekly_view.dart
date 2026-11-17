@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../../core/responsive/responsive_layout.dart';
 import '../../../../shared/widgets/navigation/youth_page_scaffold.dart';
 import '../../../../shared/widgets/common/app_press_effect.dart';
+import '../../../../core/utils/title_case.dart';
+import '../../../../data/mock/mock_weeks.dart';
 import 'weekly_controller.dart';
 import 'weekly_model.dart';
 
@@ -16,7 +18,7 @@ class WeeklyView extends GetView<WeeklyController> {
       child: YouthPageScaffold(
         currentIndex: 1,
         onNavigationTap: controller.onNavigationTap,
-        body: ListView(
+        body: Obx(() => ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
           children: [
             Center(
@@ -36,7 +38,7 @@ class WeeklyView extends GetView<WeeklyController> {
               ),
             ),
           ],
-        ),
+        )),
       ),
     );
   }
@@ -62,6 +64,7 @@ class _WeekCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+    final weekDone = week.completedDays >= programDays;
     return AppPressEffect(
       child: Material(
         elevation: 0,
@@ -106,12 +109,16 @@ class _WeekCard extends StatelessWidget {
                         const SizedBox(width: 17),
                         for (var i = 0; i < days.length; i++) ...[
                           if (i > 0) const SizedBox(width: 8),
+                          // Figma 151: a finished week fills all 7 days;
+                          // otherwise done weekdays are green and the next
+                          // one gets the coral ring.
                           _DayDot(
                             label: days[i],
-                            done: i < week.completedDays,
-                            current: i == week.completedDays &&
+                            done: weekDone || i < week.completedDays,
+                            current: !weekDone &&
+                                i == week.completedDays &&
                                 week.completedDays > 0,
-                            bold: i == 0,
+                            bold: weekDone && i == 0,
                           ),
                         ],
                       ],
@@ -135,7 +142,7 @@ class _WeekCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  week.description,
+                  titleCase(week.description),
                   style: _t(13, FontWeight.w400, _ink.withValues(alpha: .8)),
                 ),
                 const SizedBox(height: 11),
@@ -171,8 +178,8 @@ class _DayDot extends StatelessWidget {
     final Color text = done
         ? _WeekCard._ink.withValues(alpha: .8)
         : current
-            ? _WeekCard._coral
-            : _WeekCard._ink.withValues(alpha: .2);
+            ? _WeekCard._ink.withValues(alpha: .8)
+            : _WeekCard._ink.withValues(alpha: .3);
     return Container(
       width: 30,
       height: 30,
