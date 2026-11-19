@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 
 import '../../../../app/routes/app_routes.dart';
 import '../../../../data/mock/mock_weeks.dart';
+import 'worksheet_completed_dialog.dart';
 
-/// Day questions (Figma 760:2093, screen 149). Shows one question card at a
-/// time, as in Figma: Submit & Continue moves to the part's next question,
-/// then to the next part. After the last question the day is marked
-/// complete and the Completed screen replaces this one.
+/// Day worksheet (Figma 760:2093, 878:3423, 878:3508, 878:3580). One screen
+/// per part with all of that part's questions; Next moves to the next part.
+/// After Part D the day is marked complete and the "Worksheet Completed!"
+/// popup (Figma 873:2941) is shown.
 class WeeklyDayQuestionsController extends GetxController {
   final _store = WeeklyProgressStore.to;
 
@@ -16,11 +17,14 @@ class WeeklyDayQuestionsController extends GetxController {
   final DayContent day = MockWeeks.day;
 
   final partIndex = 0.obs;
-  final questionIndex = 0.obs;
-  final expanded = true.obs;
-  final canSubmit = false.obs;
 
-  late final List<List<TextEditingController>> answers;
+  /// Question indices (in the current part) whose cards are collapsed.
+  final collapsed = <int>{}.obs;
+
+  final scroll = ScrollController();
+
+  /// [part][question][answer box].
+  late final List<List<List<TextEditingController>>> answers;
 
   @override
   void onInit() {
@@ -32,8 +36,8 @@ class WeeklyDayQuestionsController extends GetxController {
     answers = [
       for (final part in day.parts)
         [
-          for (final _ in part.questions)
-            TextEditingController()..addListener(_refreshCanSubmit),
+          for (final q in part.questions)
+            [for (var i = 0; i < q.answerCount; i++) TextEditingController()],
         ],
     ];
   }
@@ -41,56 +45,57 @@ class WeeklyDayQuestionsController extends GetxController {
   @override
   void onClose() {
     for (final part in answers) {
-      for (final c in part) {
-        c.dispose();
+      for (final question in part) {
+        for (final c in question) {
+          c.dispose();
+        }
       }
     }
+    scroll.dispose();
     super.onClose();
   }
 
+  String get dayName => weekDayNames[args.dayIndex];
   String get dateLabel => dayLabel(week, args.dayIndex);
+
+  /// "Monday Worksheet" (Figma 760:2108).
+  String get title => '$dayName Worksheet';
   DayPart get part => day.parts[partIndex.value];
-  DayQuestion get question => part.questions[questionIndex.value];
-  TextEditingController get answer =>
-      answers[partIndex.value][questionIndex.value];
+  List<List<TextEditingController>> get partFields => answers[partIndex.value];
+  bool get isLastPart => partIndex.value == day.parts.length - 1;
 
-  bool get _isLastQuestionOfPart =>
-      questionIndex.value == part.questions.length - 1;
-  bool get _isLastPart => partIndex.value == day.parts.length - 1;
+  bool isExpanded(int question) => !collapsed.contains(question);
 
-  void _refreshCanSubmit() {
-    canSubmit.value = answer.text.trim().isNotEmpty;
+  void toggleQuestion(int question) {
+    if (!collapsed.remove(question)) collapsed.add(question);
   }
 
-  void _goTo(int partI, int questionI) {
-    partIndex.value = partI;
-    questionIndex.value = questionI;
-    expanded.value = true;
-    _refreshCanSubmit();
+  void _goToPart(int index) {
+    partIndex.value = index;
+    collapsed.clear();
+    if (scroll.hasClients) scroll.jumpTo(0);
   }
-
-  void toggleQuestion() => expanded.toggle();
 
   void back() {
-    if (questionIndex.value > 0) {
-      _goTo(partIndex.value, questionIndex.value - 1);
-    } else if (partIndex.value > 0) {
-      final prev = partIndex.value - 1;
-      _goTo(prev, day.parts[prev].questions.length - 1);
+    if (partIndex.value > 0) {
+      _goToPart(partIndex.value - 1);
     } else {
       Get.back();
     }
   }
 
   void submit() {
-    if (!canSubmit.value) {
+    final answered = partFields.every(
+      (question) => question.any((c) => c.text.trim().isNotEmpty),
+    );
+    if (!answered) {
       final context = Get.context;
       if (context != null) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
             const SnackBar(
-              content: Text('Please write your answer before continuing.'),
+              content: Text('Please answer each question before continuing.'),
               behavior: SnackBarBehavior.floating,
               duration: Duration(milliseconds: 1600),
             ),
@@ -98,13 +103,18 @@ class WeeklyDayQuestionsController extends GetxController {
       }
       return;
     }
-    if (!_isLastQuestionOfPart) {
-      _goTo(partIndex.value, questionIndex.value + 1);
-    } else if (!_isLastPart) {
-      _goTo(partIndex.value + 1, 0);
-    } else {
-      _store.completeDay(args.week, args.dayIndex);
-      Get.offNamed(AppRoutes.youthWeeklyDayCompleted, arguments: args);
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (!isLastPart) {
+      _goToPart(partIndex.value + 1);
+      return;
     }
+    _store.completeDay(args.week, args.dayIndex);
+    WorksheetCompletedDialog.show(
+      dayName: dayName,
+      onContinue: () {
+        Get.back<void>();
+        Get.offNamed(AppRoutes.youthWeeklyDayCompleted, arguments: args);
+      },
+    );
   }
 }

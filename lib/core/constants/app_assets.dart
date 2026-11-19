@@ -46,6 +46,11 @@ abstract final class AppAssets {
   static const chatBack = 'assets/icons/chat_back.svg';
   static const chatDots = 'assets/icons/chat_dots.svg';
   static const chatPlus = 'assets/icons/chat_plus.svg';
+  static const chatSend = 'assets/icons/chat_send.svg';
+  static const chatAttachCamera = 'assets/icons/chat_attach_camera.svg';
+  static const chatAttachGallery = 'assets/icons/chat_attach_gallery.svg';
+  static const chatAttachDocument = 'assets/icons/chat_attach_document.svg';
+  static const chatAttachVideo = 'assets/icons/chat_attach_video.svg';
   static const checkCircle = 'assets/icons/check_circle.svg';
   static const chevronRight = 'assets/icons/chevron_right.svg';
   static const chevronDown24 = 'assets/icons/chevron_down_24.svg';
@@ -74,4 +79,8 @@ abstract final class AppAssets {
   static const partDoneCheck = 'assets/icons/part_done_check.svg';
   static const questionsCalendar = 'assets/icons/questions_calendar.svg';
   static const questionChevron = 'assets/icons/question_chevron.svg';
+
+  // Worksheet completed popup (Figma 873:2941)
+  static const worksheetDoneCheck = 'assets/icons/worksheet_done_check.svg';
+  static const dialogClose = 'assets/icons/dialog_close.svg';
 }

@@ -8,12 +8,15 @@ abstract final class MockPeople {
       program: 'Court-Involved Juvenile',
       imagePath: AppAssets.rick,
       completedSteps: 2,
+      tracker: TrackerKind.program,
+      weeklyProgress: 40,
     ),
     PersonSummary(
       name: 'Lisa Harmon',
       program: 'Court-Involved Juvenile',
       imagePath: AppAssets.lisa,
       completedSteps: 4,
+      weeklyProgress: 60,
     ),
     PersonSummary(
       name: 'Ethan Hunt',
@@ -35,6 +38,8 @@ abstract final class MockPeople {
       program: 'Court-Involved Juvenile',
       imagePath: AppAssets.rick,
       completedSteps: 2,
+      tracker: TrackerKind.program,
+      weeklyProgress: 40,
     ),
   ];
 }

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../../../../app/routes/app_routes.dart';
+
 class Lesson {
   const Lesson(this.title, this.body);
   final String title;
@@ -43,9 +45,12 @@ class EmotionalRegulationController extends GetxController {
     ),
   ];
 
+  /// Figma 873:1219 → the day's worksheet questions (Figma 760:2093).
+  void markComplete() => Get.toNamed(AppRoutes.youthWeeklyDayQuestions);
+
   /// Figma uses "capitalize" text: first letter of every word is upper-case.
   static String titleCase(String value) => value.replaceAllMapped(
-        RegExp(r'(^|[\s\-—–])([a-z])'),
-        (m) => '${m[1]}${m[2]!.toUpperCase()}',
-      );
+    RegExp(r'(^|[\s\-—–])([a-z])'),
+    (m) => '${m[1]}${m[2]!.toUpperCase()}',
+  );
 }

@@ -54,8 +54,9 @@ class PeopleOverview extends StatelessWidget {
                   Center(
                     child: Text(
                       'Overview',
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(height: 33 / 24),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall?.copyWith(height: 33 / 24),
                     ),
                   ),
                   const SizedBox(height: 19),
@@ -129,9 +130,10 @@ class _ProgramFilterBar extends StatefulWidget {
 
 class _ProgramFilterBarState extends State<_ProgramFilterBar> {
   static const labels = [
+    'Orientation & Trust Building',
+    'Group Agreements',
+    'My Goals',
     'Court-Involved Juvenile',
-    'Transitional Housing',
-    'After-School Initiatives',
   ];
   var selectedIndex = 0;
 

@@ -54,6 +54,12 @@ class PersonSummaryCard extends StatelessWidget {
   final VoidCallback? onAddNote;
   final VoidCallback? onSendMessage;
 
+  // Figma 784:1273: 180 without the progress line, 198 / 206 with it.
+  double get _cardHeight {
+    if (person.weeklyProgress == null) return 180;
+    return person.tracker == TrackerKind.program ? 198 : 206;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,7 +75,7 @@ class PersonSummaryCard extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               child: SizedBox(
-                height: 180,
+                height: _cardHeight,
                 width: double.infinity,
                 child: _CardBody(person: person),
               ),
@@ -212,60 +218,140 @@ class _CardBody extends StatelessWidget {
           left: 28,
           right: 27,
           top: 106,
-          bottom: 0,
-          child: _Tracker(completed: person.completedSteps),
+          height: 56,
+          child: _Tracker(
+            kind: person.tracker,
+            completed: person.completedSteps,
+          ),
         ),
+        if (person.weeklyProgress case final progress?)
+          Positioned(
+            left: 29,
+            top: person.tracker == TrackerKind.program ? 166 : 169,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(text: 'Weekly Course Progress '),
+                  TextSpan(
+                    text: '$progress%',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: Color(0x94000000),
+              ),
+            ),
+          ),
       ],
     );
   }
 }
 
 /// Labels (y 106), 20px step circles (y 138) and the 8px track (y 144) from
-/// Figma. Circle centres sit at 0 / 33.65 / 62.22 / 100 % of the track.
+/// Figma. Daily circle centres sit at 0 / 33.65 / 62.22 / 100 % of the track;
+/// program circles follow Figma 784:1309 (x 28 / 104 / 183 / 262 / 341).
 class _Tracker extends StatelessWidget {
-  const _Tracker({required this.completed});
+  const _Tracker({required this.kind, required this.completed});
 
+  final TrackerKind kind;
   final int completed;
 
-  static const _labels = ['Check-In', 'Focus', 'Activity', 'Reflection'];
-  static const _fractions = [0.0, 106 / 315, 196 / 315, 1.0];
+  static const _dailyLabels = ['Check-In', 'Focus', 'Activity', 'Reflection'];
+  static const _dailyFractions = [0.0, 106 / 315, 196 / 315, 1.0];
+
+  static const _programLabels = [
+    'Orientation &\nTrust Building',
+    'Group\nAgreements',
+    'Focus',
+    'My Goals',
+    'Trust Meter',
+  ];
+  static const _programFractions = [
+    0.0,
+    76 / 315,
+    155 / 315,
+    234 / 315,
+    313 / 315,
+  ];
+
+  /// Per program label: x offset from its circle centre, top, and whether
+  /// that x is the label's right edge (otherwise its left edge).
+  static const _programAnchors = [
+    (-14.0, -2.0, false),
+    (-8.0, -2.0, false),
+    (15.0, 4.0, true),
+    (21.0, 4.0, true),
+    (23.0, 4.0, true),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final done = completed.clamp(0, _labels.length);
-    final labelStyle = TextStyle(
+    final program = kind == TrackerKind.program;
+    final labels = program ? _programLabels : _dailyLabels;
+    final fractions = program ? _programFractions : _dailyFractions;
+    final count = labels.length;
+    final done = completed.clamp(0, count);
+    final ink80 = AppColors.ink.withValues(alpha: .8);
+    final dailyStyle = TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w600,
-      color: AppColors.ink.withValues(alpha: .8),
+      color: ink80,
+    );
+    TextStyle programStyle(int i) => TextStyle(
+      fontSize: 8,
+      height: 11 / 8,
+      fontWeight: FontWeight.w600,
+      color: i < done ? const Color(0xFFE8857C) : ink80,
     );
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        double centre(int i) => 10 + _fractions[i] * (width - 20);
+        double centre(int i) => 10 + fractions[i] * (width - 20);
         // Figma: the fill runs up to the next (current) step's circle.
-        final fillEnd = centre(done.clamp(0, _labels.length - 1));
+        final fillEnd = centre(done.clamp(0, count - 1));
         return Stack(
           clipBehavior: Clip.none,
           children: [
-            Positioned(
-              left: 0,
-              top: 0,
-              child: Text(_labels[0], style: labelStyle),
-            ),
-            for (final i in [1, 2])
+            if (program)
+              for (var i = 0; i < count; i++)
+                Positioned(
+                  left: centre(i) + _programAnchors[i].$1,
+                  top: _programAnchors[i].$2,
+                  child: FractionalTranslation(
+                    translation: Offset(_programAnchors[i].$3 ? -1 : 0, 0),
+                    child: Text(
+                      labels[i],
+                      textAlign: _programAnchors[i].$3
+                          ? TextAlign.right
+                          : TextAlign.left,
+                      style: programStyle(i),
+                    ),
+                  ),
+                )
+            else ...[
               Positioned(
-                left: centre(i),
+                left: 0,
                 top: 0,
-                child: FractionalTranslation(
-                  translation: const Offset(-.5, 0),
-                  child: Text(_labels[i], style: labelStyle),
-                ),
+                child: Text(labels[0], style: dailyStyle),
               ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: Text(_labels[3], style: labelStyle),
-            ),
+              for (final i in [1, 2])
+                Positioned(
+                  left: centre(i),
+                  top: 0,
+                  child: FractionalTranslation(
+                    translation: const Offset(-.5, 0),
+                    child: Text(labels[i], style: dailyStyle),
+                  ),
+                ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Text(labels[3], style: dailyStyle),
+              ),
+            ],
             // Track (y 144 -> 38 from the labels' top).
             Positioned(
               left: 0,
@@ -310,14 +396,11 @@ class _Tracker extends StatelessWidget {
                   ),
                 ),
               ),
-            for (var i = 0; i < _labels.length; i++)
+            for (var i = 0; i < count; i++)
               Positioned(
                 left: centre(i) - 12,
                 top: 30,
-                child: _Step(
-                  done: i < done,
-                  next: i == done && i != _labels.length - 1,
-                ),
+                child: _Step(done: i < done, next: i == done && i != count - 1),
               ),
           ],
         );
@@ -353,7 +436,8 @@ class _Step extends StatelessWidget {
               ),
             ),
           ),
-          if (done) SvgPicture.asset(AppAssets.checkCircle, width: 24, height: 24),
+          if (done)
+            SvgPicture.asset(AppAssets.checkCircle, width: 24, height: 24),
         ],
       ),
     );

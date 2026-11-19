@@ -6,15 +6,19 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/buttons/app_back_arrow.dart';
 import 'emotional_regulation_controller.dart';
 
-TextStyle _manrope(double size, FontWeight weight, double alpha,
-        {Color color = AppColors.ink, double? height}) =>
-    TextStyle(
-      fontFamily: 'Manrope',
-      fontSize: size,
-      fontWeight: weight,
-      color: color.withValues(alpha: alpha),
-      height: height,
-    );
+TextStyle _manrope(
+  double size,
+  FontWeight weight,
+  double alpha, {
+  Color color = AppColors.ink,
+  double? height,
+}) => TextStyle(
+  fontFamily: 'Manrope',
+  fontSize: size,
+  fontWeight: weight,
+  color: color.withValues(alpha: alpha),
+  height: height,
+);
 
 class EmotionalRegulationView extends GetView<EmotionalRegulationController> {
   const EmotionalRegulationView({super.key});
@@ -62,49 +66,105 @@ class EmotionalRegulationView extends GetView<EmotionalRegulationController> {
                 const _WeekCard(),
                 const SizedBox(height: 13),
                 Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.only(bottom: 24),
+                  child: Stack(
                     children: [
-                      Text(
-                        _t(EmotionalRegulationController.sectionTitle),
-                        style: _manrope(16, FontWeight.w700, .8),
-                      ),
-                      const SizedBox(height: 10),
-                      Text.rich(
-                        TextSpan(
+                      Positioned.fill(
+                        child: ListView(
+                          // Clears the floating Mark as Complete button.
+                          padding: const EdgeInsets.only(bottom: 100),
                           children: [
-                            TextSpan(
-                              text: 'Goal:',
-                              style: _manrope(13, FontWeight.w700, .8,
-                                  height: 20 / 13),
+                            Text(
+                              _t(EmotionalRegulationController.sectionTitle),
+                              style: _manrope(16, FontWeight.w700, .8),
                             ),
-                            TextSpan(
-                              text: '\n${_t(EmotionalRegulationController.goal)}',
-                              style: _manrope(13, FontWeight.w500, .6,
-                                  height: 20 / 13),
+                            const SizedBox(height: 10),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Goal:',
+                                    style: _manrope(
+                                      13,
+                                      FontWeight.w700,
+                                      .8,
+                                      height: 20 / 13,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '\n${_t(EmotionalRegulationController.goal)}',
+                                    style: _manrope(
+                                      13,
+                                      FontWeight.w500,
+                                      .6,
+                                      height: 20 / 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                            const SizedBox(height: 24),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: AppColors.ink.withValues(alpha: .1),
+                            ),
+                            for (final lesson in lessons) ...[
+                              const SizedBox(height: 16),
+                              Text(
+                                _t(lesson.title),
+                                style: _manrope(16, FontWeight.w700, .8),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                _t(lesson.body),
+                                style: _manrope(
+                                  13,
+                                  FontWeight.w500,
+                                  .6,
+                                  height: 20 / 13,
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: AppColors.ink.withValues(alpha: .1),
+                      // Figma 873:1219: 320 x 60 on the 430 frame (12.79%
+                      // inset each side), 16 radius, ink at 80%, floating
+                      // over the lessons near the bottom. The stack sits
+                      // inside the page's 20px side padding.
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 16,
+                        child: LayoutBuilder(
+                          builder: (context, box) => Center(
+                            child: SizedBox(
+                              width: (box.maxWidth + 40) * 320 / 430,
+                              height: 60,
+                              child: Material(
+                                color: AppColors.ink.withValues(alpha: .8),
+                                borderRadius: BorderRadius.circular(16),
+                                clipBehavior: Clip.antiAlias,
+                                child: InkWell(
+                                  onTap: controller.markComplete,
+                                  child: Center(
+                                    child: Text(
+                                      'Mark as Complete',
+                                      style: _manrope(
+                                        18,
+                                        FontWeight.w500,
+                                        1,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      for (final lesson in lessons) ...[
-                        const SizedBox(height: 16),
-                        Text(
-                          _t(lesson.title),
-                          style: _manrope(16, FontWeight.w700, .8),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          _t(lesson.body),
-                          style: _manrope(13, FontWeight.w500, .6,
-                              height: 20 / 13),
-                        ),
-                      ],
                     ],
                   ),
                 ),
@@ -144,8 +204,12 @@ class _WeekCard extends StatelessWidget {
                 children: [
                   Text(
                     EmotionalRegulationController.weekLabel,
-                    style: _manrope(15, FontWeight.w800, .8,
-                        color: AppColors.coral),
+                    style: _manrope(
+                      15,
+                      FontWeight.w800,
+                      .8,
+                      color: AppColors.coral,
+                    ),
                   ),
                   Text(
                     EmotionalRegulationController.dateRange,
@@ -176,13 +240,15 @@ class _WeekCard extends StatelessWidget {
                                 height: size,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  color: i <
+                                  color:
+                                      i <
                                           EmotionalRegulationController
                                               .completedDays
                                       ? const Color(0xFF9AE66E)
                                       : Colors.white,
                                   shape: BoxShape.circle,
-                                  border: i <
+                                  border:
+                                      i <
                                           EmotionalRegulationController
                                               .completedDays
                                       ? null

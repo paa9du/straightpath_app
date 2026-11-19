@@ -43,10 +43,14 @@ class WeekContent {
 
 /// One question inside a part (Figma 149).
 class DayQuestion {
-  const DayQuestion(this.title, this.prompt);
+  const DayQuestion(this.title, this.prompt, {this.answerCount = 1});
 
   final String title;
   final String prompt;
+
+  /// Number of one-line answer boxes (Figma 849:1242 shows 5 for "Who Am I?").
+  /// 1 shows a single large answer box (Figma 878:3610).
+  final int answerCount;
 }
 
 /// A part of a day's activity, e.g. "Part A - Self-Discovery".
@@ -68,6 +72,11 @@ class DayPart {
   /// Figma 148 / 149 copy: Parts A and B use an en dash, C and D an em dash.
   String get title =>
       'Part $letter ${letter == 'A' || letter == 'B' ? '–' : '—'} $name';
+
+  /// Worksheet screens (Figma 760:2093, 878:3423/3508/3580): only Part A
+  /// uses an en dash.
+  String get worksheetTitle =>
+      'Part $letter ${letter == 'A' ? '–' : '—'} $name';
 }
 
 /// Static content for a day's activity (Figma 148 / 149).
@@ -112,8 +121,18 @@ const programDays = 5;
 bool isWeekendDay(int dayIndex) => dayIndex >= programDays;
 
 const _months = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 String _short(DateTime d) => '${d.day} ${_months[d.month - 1]}';
@@ -199,9 +218,13 @@ abstract final class MockWeeks {
         name: 'Self-Discovery',
         answers: 5,
         minutes: 1,
+        // Figma 760:2093
         questions: [
-          DayQuestion('Who Am I?', '1. Something about me'),
-          DayQuestion('What Matters To Me?', '2. Things I care about most'),
+          DayQuestion(
+            'Who Am I?',
+            'List 5 things about yourself',
+            answerCount: 5,
+          ),
         ],
       ),
       DayPart(
@@ -209,9 +232,9 @@ abstract final class MockWeeks {
         name: 'Strength Assessment',
         answers: 3,
         minutes: 1,
+        // Figma 878:3423
         questions: [
-          DayQuestion('My Strengths', '1. Something I am good at'),
-          DayQuestion('Proud Moment', '2. A time I felt proud of myself'),
+          DayQuestion('3 strengths I have', 'List 3 things', answerCount: 3),
         ],
       ),
       DayPart(
@@ -219,9 +242,13 @@ abstract final class MockWeeks {
         name: 'Growth Areas',
         answers: 2,
         minutes: 1,
+        // Figma 878:3508
         questions: [
-          DayQuestion('What I Want To Improve', '1. One thing I want to work on'),
-          DayQuestion('What Gets In The Way', '2. Something that holds me back'),
+          DayQuestion(
+            '2 things I want to improve',
+            'List 2 things',
+            answerCount: 2,
+          ),
         ],
       ),
       DayPart(
@@ -229,9 +256,11 @@ abstract final class MockWeeks {
         name: 'Identity Reflection',
         answers: 3,
         minutes: 1,
+        // Figma 878:3580: three open questions on one screen.
         questions: [
-          DayQuestion('Who I Want To Be', '1. The person I am becoming'),
-          DayQuestion('One Step Today', '2. Something I can do today'),
+          DayQuestion('What makes you different from others?', ''),
+          DayQuestion('What are you proud of about yourself?', ''),
+          DayQuestion('What do people misunderstand about you?', ''),
         ],
       ),
     ],
